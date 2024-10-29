@@ -5,8 +5,9 @@ import styles from "./login.module.css";
 
 export default function Login() {
   const router = useRouter();
-  //Api Routes
-  const loginURL = "/api/loginSystem/login";
+  //URLS
+  const loginURL = "/api/auth/login";
+  const successLink = "/profile";
   // Used to give focus to the form input on load
   const inputReference = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
@@ -65,9 +66,13 @@ export default function Login() {
         };
         const resLogin = await fetch(loginURL, options);
         const dataLogin = await resLogin.json();
-        console.log(dataLogin);
+        //console.log(dataLogin);
         if (!dataLogin.errors) {
-          //router.push("/profile");
+          setFormErrors({
+            email: null,
+            password: null,
+          });
+          //router.push(successLink);
         } else {
           setFormErrors({
             email: dataLogin.errors.email ? (
@@ -122,7 +127,7 @@ export default function Login() {
         email: null,
         password: (
           <div className={styles.error} id="emailError" aria-live="polite">
-            {`Wrong username or password`}
+            {`Incorrect username or password`}
           </div>
         ),
       });
