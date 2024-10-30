@@ -60,7 +60,7 @@ export default function Login() {
     if (validate()) {
       try {
         const options = {
-          method: "POST",
+          method: "PUT",
           body: JSON.stringify(formData),
           headers: { "Content-Type": "application/json" },
         };

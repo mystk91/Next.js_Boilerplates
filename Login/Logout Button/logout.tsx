@@ -13,7 +13,7 @@ export default function Logout() {
   async function logout() {
     try {
       const options = {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
       };
       const resLogout = await fetch(logoutURL, options);
