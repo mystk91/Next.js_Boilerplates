@@ -4,23 +4,23 @@ import { useEffect } from "react";
 /*
  ** ref- a ref that will be placed on an element
  ** onClickOff - the function called when user clicks off the element
- ** activated - a boolean involving a useState that will "turn on" the clickOff function
+ ** active - a boolean involving a useState that will "turn on" the clickOff function
  */
 type UseClickOffProps<T extends HTMLElement> = {
   ref: React.MutableRefObject<T | null>;
   onClickOff: (e: MouseEvent) => void;
-  activated: boolean;
+  active: boolean;
 };
 
 // Performs a click-off function when you don't click on an element
 export const useClickOff = <T extends HTMLElement>({
   ref,
   onClickOff,
-  activated,
+  active,
 }: UseClickOffProps<T>) => {
   useEffect(() => {
-    // Skip adding event listener if the boolean is not enabled
-    if (!activated) {
+    // Skip adding event listener if useClickOff is not activated
+    if (!active) {
       return;
     }
     const handleClick = (e: MouseEvent) => {
@@ -32,5 +32,5 @@ export const useClickOff = <T extends HTMLElement>({
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, [activated]);
+  }, [active]);
 };

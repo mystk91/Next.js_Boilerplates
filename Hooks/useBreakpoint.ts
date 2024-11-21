@@ -6,7 +6,7 @@ import { useEffect } from "react";
  ** onBreakpoint - the function that will be called when the breakpoint is passed either direction
  ** onAbove - the function that will be called when we go above the breakpoint
  ** onBelow - the function that will be called when we go below the breakpoint
- ** enabled - an optional boolean involving a useState that will "turn on" the handleResize event
+ ** active - an optional boolean involving a useState that will "turn on" the handleResize event
  ** initialize - an optional boolean that will let us use our breakpoint functions when we first mount useBreakpoint
  */
 type UseBreakpointProps = {
@@ -14,7 +14,7 @@ type UseBreakpointProps = {
   onBreakpoint?: () => void;
   onAbove?: () => void;
   onBelow?: () => void;
-  activated?: boolean;
+  active?: boolean;
   initialize?: boolean;
 };
 
@@ -24,12 +24,12 @@ export const useBreakpoint = ({
   onBreakpoint,
   onAbove,
   onBelow,
-  activated = true,
+  active = true,
   initialize = false,
 }: UseBreakpointProps) => {
   useEffect(() => {
-    // Skip adding event listener if the boolean is not enabled
-    if (!activated) {
+    // Skip adding event listener if useBreakpoint is not activated
+    if (!active) {
       return;
     }
     let windowWidth = window.innerWidth;
@@ -59,5 +59,5 @@ export const useBreakpoint = ({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [activated]);
+  }, [active]);
 };
