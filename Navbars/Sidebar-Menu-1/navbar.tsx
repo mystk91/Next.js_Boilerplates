@@ -1,39 +1,33 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./navbar.module.css";
 import { usePathname } from "next/navigation";
 import classNames from "classnames";
+import { useClickOff } from "@/app/hooks/useClickOff";
 
 export default function Navbar() {
+  const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/forum", label: "Forum" },
+    { href: "/games", label: "Games" },
+    { href: "/store", label: "Store" },
+    { href: "/contact", label: "Contact" },
+    { href: "/extras", label: "Extras" },
+    { href: "/login", label: "Login" },
+  ];
   const pathName: string = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuClosing, setMenuClosing] = useState(false);
+  const menuRef = useRef<null | HTMLUListElement>(null);
 
-  //Usåed to close menu if user clicks elsewhere
-  const handleClick = useCallback(
-    (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        !target.closest(`.${styles.navMenu}`) &&
-        !target.closest(`.${styles.menuButton}`)
-      ) {
-        closeMenu();
-      }
-    },
-    [menuOpen]
-  );
-
-  // Add/remove event listener based on menuOpen
-  useEffect(() => {
-    menuOpen
-      ? document.addEventListener("click", handleClick, true)
-      : document.removeEventListener("click", handleClick, true);
-    return () => {
-      document.removeEventListener("click", handleClick, true);
-    };
-  }, [menuOpen]);
+  useClickOff({
+    ref: menuRef,
+    onClickOff: closeMenu,
+    active: menuOpen,
+  });
 
   //For opening / closing mobile menu
   function toggleMenu() {
@@ -88,87 +82,22 @@ export default function Navbar() {
           { [styles.open]: menuOpen },
           { [styles.closing]: menuClosing }
         )}
+        ref={menuRef}
       >
-        <li
-          className={classNames(
-            styles.navItem,
-            { [styles.active]: pathName === "/" },
-            { [styles.open]: menuOpen },
-            { [styles.closing]: menuClosing }
-          )}
-        >
-          <Link href="/">Home</Link>
-        </li>
-        <li
-          className={classNames(
-            styles.navItem,
-            { [styles.active]: pathName === "/about" },
-            { [styles.open]: menuOpen },
-            { [styles.closing]: menuClosing }
-          )}
-        >
-          <Link href="/about">About</Link>
-        </li>
-        <li
-          className={classNames(
-            styles.navItem,
-            { [styles.active]: pathName === "/forum" },
-            { [styles.open]: menuOpen },
-            { [styles.closing]: menuClosing }
-          )}
-        >
-          <Link href="/forum">Forum</Link>
-        </li>
-        <li
-          className={classNames(
-            styles.navItem,
-            { [styles.active]: pathName === "/store" },
-            { [styles.open]: menuOpen },
-            { [styles.closing]: menuClosing }
-          )}
-        >
-          <Link href="/store">Store</Link>
-        </li>
-        <li
-          className={classNames(
-            styles.navItem,
-            { [styles.active]: pathName === "/games" },
-            { [styles.open]: menuOpen },
-            { [styles.closing]: menuClosing }
-          )}
-        >
-          <Link href="/games">Games</Link>
-        </li>
-        <li
-          className={classNames(
-            styles.navItem,
-            { [styles.active]: pathName === "/contact" },
-            { [styles.open]: menuOpen },
-            { [styles.closing]: menuClosing }
-          )}
-        >
-          <Link href="/contact">Contact</Link>
-        </li>
-        <li
-          className={classNames(
-            styles.navItem,
-            { [styles.active]: pathName === "/extras" },
-            { [styles.open]: menuOpen },
-            { [styles.closing]: menuClosing }
-          )}
-        >
-          <Link href="/extras">Extras</Link>
-        </li>
-        <li
-          className={classNames(
-            styles.navItem,
-            { [styles.active]: pathName === "/login" },
-            { [styles.open]: menuOpen },
-            { [styles.closing]: menuClosing }
-          )}
-        >
-          <Link href="/login">Login</Link>
-        </li>
+        {navLinks.map(({ href, label }) => (
+          <li
+            key={href}
+            className={classNames(styles.navItem, {
+              [styles.active]: pathName === href,
+              [styles.open]: menuOpen,
+              [styles.closing]: menuClosing,
+            })}
+          >
+            <Link href={href} onClick={closeMenu}>
+              {label}
+            </Link>
+          </li>
+        ))}
       </ul>
     </nav>
   );

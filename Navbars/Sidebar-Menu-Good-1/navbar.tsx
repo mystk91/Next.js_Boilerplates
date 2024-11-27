@@ -6,13 +6,15 @@ import styles from "./navbar.module.css";
 import { usePathname } from "next/navigation";
 import classNames from "classnames";
 import { createFocusTrap } from "focus-trap";
+import SearchBar from "../searchBar/searchBar";
+import { useBreakpoint } from "@/app/hooks/useBreakpoint";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/forum", label: "Forum" },
-  { href: "/store", label: "Store" },
   { href: "/games", label: "Games" },
+  { href: "/store", label: "Store" },
   { href: "/contact", label: "Contact" },
   { href: "/extras", label: "Extras" },
   { href: "/login", label: "Login" },
@@ -44,27 +46,23 @@ export default function Navbar() {
     </svg>
   );
 
+  useBreakpoint({
+    breakpoint: breakpoint,
+    active: menuOpen,
+    onAbove: closeMenu,
+  });
+
   useEffect(() => {
     if (menuOpen && menuRef.current && createFocusTrap) {
       const focusTrap = createFocusTrap(menuRef.current, {
         escapeDeactivates: true,
         clickOutsideDeactivates: true,
-        onDeactivate: closeMenu,
+        onDeactivate: () => {
+          if (menuOpen) closeMenu();
+        },
       });
-
-      // Activate focus trap if window width is less than the breakpoint
-      if (window.innerWidth <= breakpoint) {
-        focusTrap.activate();
-      }
-
-      window.addEventListener("resize", handleResize);
-      function handleResize() {
-        // Deactivate focus trap if window width exceeds the breakpoint
-        if (window.innerWidth > breakpoint) focusTrap.deactivate();
-      }
-
+      focusTrap.activate();
       return () => {
-        window.removeEventListener("resize", handleResize);
         focusTrap.deactivate();
       };
     }
@@ -85,53 +83,55 @@ export default function Navbar() {
 
   //Closes the menu
   function closeMenu() {
-    setMenuOpen(false);
     setMenuClosing(true);
     document.body.classList.remove("menu-open"); //Must have this class in global styles to overflow: none
     setTimeout(() => {
+      setMenuOpen(false);
       setMenuClosing(false);
     }, 150);
   }
 
   return (
     <nav className={styles.navbar} aria-label="Main">
-      <button
-        className={styles.menuButton}
-        onClick={toggleMenu}
-        aria-label="Toggle Menu"
-        aria-expanded={menuOpen ? "true" : "false"}
-      >
-        {menuIcon}
-      </button>
-      <div
-        className={classNames(
-          styles.navMenuContainer,
-          { [styles.open]: menuOpen },
-          { [styles.closing]: menuClosing }
-        )}
-      >
-        <ul
-          ref={menuRef}
+        <button
+          className={styles.menuButton}
+          onClick={toggleMenu}
+          aria-label="Toggle Menu"
+          aria-expanded={menuOpen ? "true" : "false"}
+        >
+          {menuIcon}
+        </button>
+        <div
           className={classNames(
-            styles.navMenu,
+            styles.navMenuContainer,
             { [styles.open]: menuOpen },
             { [styles.closing]: menuClosing }
           )}
         >
-          {navLinks.map(({ href, label }) => (
-            <li
-              key={href}
-              className={classNames(styles.navItem, {
-                [styles.active]: pathName === href,
-                [styles.open]: menuOpen,
-                [styles.closing]: menuClosing,
-              })}
-            >
-              <Link href={href}>{label}</Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+          <ul
+            ref={menuRef}
+            className={classNames(
+              styles.navMenu,
+              { [styles.open]: menuOpen },
+              { [styles.closing]: menuClosing }
+            )}
+          >
+            {navLinks.map(({ href, label }) => (
+              <li
+                key={href}
+                className={classNames(styles.navItem, {
+                  [styles.active]: pathName === href,
+                  [styles.open]: menuOpen,
+                  [styles.closing]: menuClosing,
+                })}
+              >
+                <Link href={href} onClick={closeMenu}>
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
     </nav>
   );
 }

@@ -1,6 +1,7 @@
 .navbar {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
+  align-items: center;
   width: 100vw;
   min-height: 5.6rem;
   background: radial-gradient(

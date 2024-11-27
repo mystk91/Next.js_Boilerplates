@@ -1,0 +1,174 @@
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100vw;
+  min-height: 5.6rem;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  background-color: rgb(91, 64, 91);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.navbarLeft,
+.navbarRight {
+  flex: 1;
+}
+
+.navbarRight {
+  margin: 0 0.8rem;
+}
+
+.navMenu {
+  display: flex;
+  justify-content: center;
+}
+
+.navItem {
+  min-width: 11.2rem;
+  min-width: 8.8rem;
+  width: 9rem;
+  height: 5.6rem;
+  font-size: 1.8rem;
+  border-left: 0.05rem solid black;
+  font-weight: 600;
+  background-color: rgb(140, 95, 139);
+  color: rgb(255, 255, 255);
+  list-style: none;
+}
+
+.navItem:last-child {
+  border-right: 0.05rem solid black;
+}
+
+.navItem:hover {
+  filter: brightness(1.4);
+}
+
+.navItem > a {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 0px 0px 0.1rem #000000;
+}
+
+.active {
+  filter: brightness(1.3);
+}
+
+.menuButton {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  /* This must be in global styles using modules
+  .menu-open {
+    overflow: hidden; 
+  }
+  */
+
+  .navbarLeft,
+  .navbarRight {
+    flex: none;
+  }
+
+  .navbar {
+    justify-content: space-between;
+    padding: 0 5vw;
+  }
+
+  .menuButton {
+    all: unset;
+    display: flex;
+    justify-self: flex-start;
+    justify-content: center;
+    align-items: center;
+    height: 5.6rem;
+    width: max-content;
+    padding: 0 1.2rem;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  .navMenuContainer.open {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    display: flex;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: background-color 0.1s;
+  }
+
+  .navMenuContainer.closing {
+    transition: background-color 0.1s;
+  }
+
+  .navMenu {
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: -18rem;
+    height: 100vh;
+    padding-top: 10vh;
+    border-right: 0.05rem solid black;
+    justify-content: flex-start;
+    background-color: rgb(140, 95, 139);
+    opacity: 1;
+    visibility: hidden;
+  }
+
+  .navMenu.open {
+    left: 0rem;
+    transition: left 0.2s;
+    visibility: visible;
+  }
+
+  .navMenu.closing {
+    left: -18rem;
+    transition: left 0.13s;
+  }
+
+  .navItem {
+    width: 18rem;
+    border: none;
+    border-top: 0.05rem solid black;
+  }
+
+  .navItem:last-child {
+    border-bottom: 0.05rem solid black;
+  }
+
+  .navItem.open {
+    height: 5.6rem;
+  }
+
+  .navItem.closing {
+    width: 18rem;
+  }
+
+  .menuIcon {
+    height: 60%;
+    filter: invert();
+    background-color: transparent;
+    transition: transform 0.2s;
+  }
+
+  .menuIcon.open {
+    transition: transform 0.2s;
+    transform: rotateZ(270deg);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+}

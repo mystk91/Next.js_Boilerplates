@@ -78,6 +78,7 @@
   }
 
   .navMenu {
+    visibility: hidden;
     flex-direction: column;
     position: fixed;
     top: 0;
@@ -90,6 +91,7 @@
   }
 
   .navMenu.open {
+    visibility: visible;
     left: 0rem;
     transition: left 0.2s;
   }

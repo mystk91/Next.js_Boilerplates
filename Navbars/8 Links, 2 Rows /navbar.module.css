@@ -26,6 +26,8 @@
 }
 
 .navItem {
+  min-width: 11.2rem;
+  min-width: 8.8rem;
   width: 9rem;
   height: 5.6rem;
   font-size: 1.8rem;

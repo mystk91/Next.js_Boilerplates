@@ -6,6 +6,8 @@ import styles from "./navbar.module.css";
 import { usePathname } from "next/navigation";
 import classNames from "classnames";
 import { createFocusTrap } from "focus-trap";
+import { useBreakpoint } from "@/app/hooks/useBreakpoint";
+import { useClickOff } from "@/app/hooks/useClickOff";
 
 const navItems: NavItem[] = [
   { label: "Home", href: "/" },
@@ -100,10 +102,16 @@ interface NavItem {
 
 interface NavItemProps {
   navItem: NavItem;
+  closeMenu?: () => void;
+  closeSubmenu?: () => void;
 }
 
 //Creates one NavItem thats on the navbar menu, lets us have descending menus through recursion
-function NavItem({ navItem }: NavItemProps): JSX.Element {
+function NavItem({
+  navItem,
+  closeMenu,
+  closeSubmenu,
+}: NavItemProps): JSX.Element {
   const arrow = (
     <svg
       className={styles.menuArrow}
@@ -118,36 +126,16 @@ function NavItem({ navItem }: NavItemProps): JSX.Element {
   const pathName: string = usePathname();
   const componentRef = useRef<HTMLLIElement | null>(null);
 
-  // Closes submenu if not clicked on
-  const handleClick = useCallback((e: MouseEvent) => {
-    if (
-      componentRef.current &&
-      !componentRef.current.contains(e.target as Node)
-    ) {
-      setSubmenuOpen(false);
-    }
-  }, []);
-
-  // Add/remove event listeners
-  useEffect(() => {
-    const windowWidth = window.innerWidth;
-    window.addEventListener("resize", handleResize);
-    function handleResize() {
-      // Closes the menu if window passes the breakpoint either way
-      if (
-        (window.innerWidth > breakpoint && windowWidth <= breakpoint) ||
-        (window.innerWidth < breakpoint && windowWidth >= breakpoint)
-      )
-        setSubmenuOpen(false);
-    }
-    submenuOpen
-      ? document.addEventListener("click", handleClick, true)
-      : document.removeEventListener("click", handleClick, true);
-    return () => {
-      document.removeEventListener("click", handleClick, true);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [submenuOpen]);
+  useBreakpoint({
+    breakpoint: breakpoint,
+    onAbove: () => setSubmenuOpen(false),
+    active: submenuOpen,
+  });
+  useClickOff({
+    ref: componentRef,
+    onClickOff: () => setSubmenuOpen(false),
+    active: submenuOpen,
+  });
 
   return navItem.href ? (
     <li
@@ -156,7 +144,15 @@ function NavItem({ navItem }: NavItemProps): JSX.Element {
         [styles.active]: pathName === navItem.href,
       })}
     >
-      <Link href={navItem.href}>{navItem.label}</Link>
+      <Link
+        href={navItem.href}
+        onClick={() => {
+          closeMenu?.();
+          closeSubmenu?.();
+        }}
+      >
+        {navItem.label}
+      </Link>
     </li>
   ) : !submenuOpen ? (
     <li
@@ -194,7 +190,12 @@ function NavItem({ navItem }: NavItemProps): JSX.Element {
       <ul className={classNames(styles.navMenu)}>
         {navItem.links &&
           navItem.links.map((item) => (
-            <NavItem key={item.label + item.href} navItem={item} />
+            <NavItem
+              key={item.label + item.href}
+              navItem={item}
+              closeMenu={closeMenu}
+              closeSubmenu={() => setSubmenuOpen(false)}
+            />
           ))}
       </ul>
     </li>
@@ -223,27 +224,23 @@ export default function Navbar() {
     </svg>
   );
 
+  useBreakpoint({
+    breakpoint: breakpoint,
+    active: menuOpen,
+    onAbove: closeMenu,
+  });
+
   useEffect(() => {
     if (menuOpen && menuRef.current && createFocusTrap) {
       const focusTrap = createFocusTrap(menuRef.current, {
         escapeDeactivates: true,
         clickOutsideDeactivates: true,
-        onDeactivate: closeMenu,
+        onDeactivate: () => {
+          if (menuOpen) closeMenu();
+        },
       });
-
-      // Activate focus trap if window width is less than the breakpoint
-      if (window.innerWidth <= breakpoint) {
-        focusTrap.activate();
-      }
-
-      window.addEventListener("resize", handleResize);
-      function handleResize() {
-        // Deactivate focus trap if window width exceeds the breakpoint
-        if (window.innerWidth > breakpoint) focusTrap.deactivate();
-      }
-
+      focusTrap.activate();
       return () => {
-        window.removeEventListener("resize", handleResize);
         focusTrap.deactivate();
       };
     }
@@ -298,7 +295,11 @@ export default function Navbar() {
           )}
         >
           {navItems.map((item) => (
-            <NavItem key={item.label + item.href} navItem={item} />
+            <NavItem
+              key={item.label + item.href}
+              navItem={item}
+              closeMenu={closeMenu}
+            />
           ))}
         </ul>
       </div>
