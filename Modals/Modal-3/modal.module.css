@@ -1,4 +1,5 @@
 .backdrop {
+  background-color: var(--modalBackdropColor);
   width: 100vw;
   height: 100vh;
   position: fixed;
@@ -6,7 +7,6 @@
   left: 0;
   display: flex;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.4);
   z-index: 100;
   cursor: pointer;
   overflow-y: scroll;
@@ -14,11 +14,11 @@
 }
 
 .modal {
+  border: var(--smallBorder);
+  background-color: var(--background);
   height: max-content;
   padding: 1rem 1.6rem 1rem 1.6rem;
-  border: 0.05rem solid rgb(50, 50, 50);
   margin: auto 2vw;
-  background-color: white;
   cursor: default;
   max-width: 95vw;
   position: relative;
@@ -26,16 +26,16 @@
 
 .closeButton {
   all: unset;
+  border: var(--smallBorder);
+  background-color: var(--background);
   height: 1.2rem;
   width: 1.2rem;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  background-color: rgb(240, 240, 240);
   border-radius: 2.5rem;
   padding: 1.2rem;
-  border: 0.05rem rgb(50, 50, 50);
   position: absolute;
   right: 2.4rem;
   top: 2.4rem;
@@ -43,11 +43,13 @@
 }
 
 .closeIcon {
+  fill: var(--iconColor);
   height: 100%;
   width: 100%;
   pointer-events: none;
 }
 
 .closeButton:focus {
-  outline: 0.1rem solid rgb(0, 0, 0);
+  outline: 1px solid var(--foreground);
+  background-color: var(--buttonHoverColor);
 }

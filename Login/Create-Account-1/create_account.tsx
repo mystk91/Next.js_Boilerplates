@@ -1,8 +1,10 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
-import styles from "./login.module.css";
-//Eye Icons for toggling password visibility
+import styles from "./create_account.module.css";
+import { useFocus } from "@/app/hooks/useFocus";
+import { useFormUpdater } from "@/app/hooks/useFormUpdater";
+
+//Eye icons for toggling password visibility
 const eyeSVG = (
   <svg
     className={styles.eye}
@@ -26,69 +28,63 @@ const closedEyeSVG = (
   </svg>
 );
 
-export default function Login() {
-  const router = useRouter();
+export default function CreateAccount() {
   //URLS
-  const loginURL = "/api/auth/login";
-  const successLink = "/profile";
+  const createAccountURL = "/api/auth/sendVerification";
+  //For which HTML we are currently showing
+  const [screen, setScreen] = useState<"default" | "loading" | "success">(
+    "default"
+  );
   // Used to give focus to the form input on load
   const inputReference = useRef<HTMLInputElement | null>(null);
-  useEffect(() => {
-    if (inputReference.current) {
-      inputReference.current.focus();
-    }
-  }, []);
-
+  useFocus({
+    ref: inputReference,
+  });
   //Password visibility
   const [passwordVisible, setPasswordVisible] = useState(false);
-
   // State for form data and errors
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    verifyPassword: "",
+  });
+  const handleChange = useFormUpdater(setFormData);
   const [formErrors, setFormErrors] = useState({
     email: null as React.ReactNode | null,
-    password: null as React.ReactNode | null,
+    password: (
+      <div className={styles.input_subtext}>{`Enter a strong password`}</div>
+    ) as React.ReactNode | null,
   });
 
-  // Handle input changes
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  }
-
   // Handle login submission
-  async function login(e: React.FormEvent) {
+  async function createAccount(e: React.FormEvent) {
     e.preventDefault();
     if (validate()) {
       try {
         const options = {
-          method: "PUT",
+          method: "POST",
           body: JSON.stringify(formData),
           headers: { "Content-Type": "application/json" },
         };
-        const resLogin = await fetch(loginURL, options);
-        const dataLogin = await resLogin.json();
-        //console.log(dataLogin);
-        if (!dataLogin.errors) {
-          setFormErrors({
-            email: null,
-            password: null,
-          });
-          //router.push(successLink);
+        const resCreate = await fetch(createAccountURL, options);
+        const dataCreate = await resCreate.json();
+        if (!dataCreate.errors) {
+          setScreen("success");
         } else {
           setFormErrors({
-            email: dataLogin.errors.email ? (
+            email: dataCreate.errors.email ? (
               <div className={styles.error} id="emailError" aria-live="polite">
-                {dataLogin.errors.email}
+                {dataCreate.errors.email}
               </div>
             ) : null,
-            password: dataLogin.errors.password ? (
+            password: dataCreate.errors.password ? (
               <div
                 className={styles.error}
                 id="passwordError"
                 role="alert"
                 aria-live="polite"
               >
-                {dataLogin.errors.password}
+                {dataCreate.errors.password}
               </div>
             ) : null,
           });
@@ -113,35 +109,54 @@ export default function Login() {
 
   //Checks to see if input fields are valid, returns true if valid, otherwise adds error messages and returns false
   function validate(): boolean {
-    let emailRegExp = new RegExp(
+    const emailRegExp = new RegExp(
       "^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,256})$"
     );
-    let passwordRegExp = new RegExp(
+    const passwordRegExp = new RegExp(
       "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*[!@#$%^&*_0-9]).{8,32}$"
     );
-    //Checks if email address and password are valid
-    if (
-      !emailRegExp.test(formData.email) ||
-      !passwordRegExp.test(formData.password)
-    ) {
-      setFormErrors({
-        email: null,
-        password: (
-          <div className={styles.error} id="emailError" aria-live="polite">
-            {`Incorrect username or password`}
-          </div>
-        ),
-      });
+    let errors = {
+      email: null as React.ReactNode | null,
+      password: null as React.ReactNode | null,
+    };
+    //Checks if email address and passwords are valid
+    if (!emailRegExp.test(formData.email)) {
+      errors.email = (
+        <div className={styles.error} id="emailError" aria-live="polite">
+          {`Invalid email`}
+        </div>
+      );
+    }
+    if (!passwordRegExp.test(formData.password)) {
+      errors.password = (
+        <div className={styles.error} id="emailError" aria-live="polite">
+          {`Make your password stronger`}
+        </div>
+      );
+    } else if (formData.password !== formData.verifyPassword) {
+      errors.password = (
+        <div className={styles.error} id="emailError" aria-live="polite">
+          {`Passwords do not match`}
+        </div>
+      );
+    }
+    if (!errors.email && !errors.password) {
+      return true;
+    } else {
+      setFormErrors({ email: errors.email, password: errors.password });
       return false;
-    } else return true;
+    }
   }
 
-  return (
-    <div className={styles.login_container} aria-label="Login Container">
+  return screen === "default" ? (
+    <div
+      className={styles.create_account_container}
+      aria-label="Create Account Container"
+    >
       <form
-        className={styles.login_form}
-        onSubmit={login}
-        aria-label="Login Form"
+        className={styles.create_account_form}
+        onSubmit={createAccount}
+        aria-label="Create Account Form"
       >
         <div>
           <label htmlFor="email">{`Email`}</label>
@@ -183,24 +198,49 @@ export default function Login() {
               {passwordVisible ? eyeSVG : closedEyeSVG}
             </button>
           </div>
+        </div>
+        <div>
+          <label htmlFor="verifyPassword">{`Verify Password`}</label>
+          <div className={styles.input_container}>
+            <input
+              id="verifyPassword"
+              className={styles.password}
+              name="verifyPassword"
+              type={passwordVisible ? "visible" : "password"}
+              maxLength={32}
+              value={formData.verifyPassword}
+              onChange={handleChange}
+              autoComplete="current-password"
+            />
+            <button
+              className={styles.toggle_password}
+              type="button"
+              onClick={() => setPasswordVisible(!passwordVisible)}
+              tabIndex={50}
+              aria-label={passwordVisible ? "Hide password" : "Show password"}
+              aria-pressed={passwordVisible}
+            >
+              {passwordVisible ? eyeSVG : closedEyeSVG}
+            </button>
+          </div>
           {formErrors.password}
-          <a
-            href="/recover-password"
-            className={styles.forgot_password}
-            tabIndex={1}
-          >{`Forgot Password?`}</a>
         </div>
         <div>
           <button type="submit" className={styles.submit_button}>
-            {`Sign in`}
+            {`Create Account`}
           </button>
         </div>
       </form>
-      <div className={styles.signup_link_container}>
-        {`Not a member?`}&nbsp;
-        <a href="/signup">{`Sign up!`}</a>
-      </div>
-      <div className={styles.login_options}></div>
     </div>
-  );
+  ) : screen === "success" ? (
+    <div
+      className={styles.create_account_container}
+      aria-label="Message Container"
+    >
+      <div
+        className={styles.body_text}
+        aria-live="polite"
+      >{`An account verification link has been sent to your email.`}</div>
+    </div>
+  ) : null;
 }

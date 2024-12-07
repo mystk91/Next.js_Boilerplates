@@ -1,29 +1,33 @@
-.login_container {
+.create_account_container {
   border: var(--smallBorder);
-  background-color: var(--background);
   width: 36rem;
   max-width: 36rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding: 2.4rem 3.2rem;
   border-radius: 0.4rem;
   row-gap: 1.6rem;
 }
 
-.login_form {
+.create_account_container > * {
+  width: 95%;
+}
+
+.create_account_form {
   display: flex;
   flex-direction: column;
   row-gap: 0.8rem;
 }
 
-.login_form > * {
+.create_account_form > * {
   display: flex;
   flex-direction: column;
   align-items: center;
   row-gap: 0.8rem;
 }
 
-.login_form label {
+.create_account_form label {
   align-self: flex-start;
 }
 
@@ -33,13 +37,13 @@
 
 .input_container {
   height: 3.2rem;
-  width: 90%;
+  width: 100%;
 }
 
 .submit_button {
   border: var(--smallBorder);
   height: 4rem;
-  width: 90%;
+  width: 100%;
   border-radius: 0.4rem;
   font-size: 1.8rem;
   cursor: pointer;
@@ -51,7 +55,6 @@
 }
 
 .input_container input {
-  background: var(--inputBackground);
   border: var(--smallBorder);
   width: 100%;
   padding-left: 0.4rem;
@@ -64,9 +67,19 @@
   border-right: none;
 }
 
-.login_form label {
+.create_account_form label {
   font-size: 2.4rem;
   font-weight: bolder;
+}
+
+.body_text {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.error,
+.input_subtext {
+  align-self: flex-start;
 }
 
 .error {
@@ -75,14 +88,13 @@
 }
 
 .toggle_password {
-  background-color: var(--buttonBackground);
-  border: var(--smallBorder);
   all: unset;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   width: 15%;
+  border: 0.05rem solid rgb(50, 50, 50);
 }
 
 .eye,
@@ -104,10 +116,9 @@
   font-family: Inter, sans-serif;
 }
 
-.login_form a,
-.login_form .error {
+.create_password_form a,
+.create_password_form .error {
   align-self: flex-start;
-  margin-left: 5%;
   font-size: 1.6rem;
 }
 
