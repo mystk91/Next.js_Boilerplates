@@ -7,7 +7,7 @@ import { useEffect } from "react";
  */
 type useFocusProps<T extends HTMLElement> = {
   ref: React.MutableRefObject<T | null>;
-  active: boolean;
+  active?: boolean;
 };
 
 // Focuses an element that has a ref placed onto it

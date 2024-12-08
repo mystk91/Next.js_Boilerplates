@@ -74,13 +74,13 @@ export default function Navbar() {
   function openMenu() {
     setMenuClosing(false);
     setMenuOpen(true);
-    document.body.classList.add("menu-open"); //Must have this class in global styles to overflow: none
+    document.body.style.overflow = "hidden";
   }
 
   //Closes the menu
   function closeMenu() {
     setMenuClosing(true);
-    document.body.classList.remove("menu-open"); //Must have this class in global styles to overflow: none
+    document.body.style.overflow = "auto";
     setTimeout(() => {
       setMenuOpen(false);
       setMenuClosing(false);

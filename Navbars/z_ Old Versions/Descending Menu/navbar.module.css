@@ -111,12 +111,6 @@
 }
 
 @media (max-width: 800px) {
-  /* This must be in global styles using modules
-  .menu-open {
-    overflow: hidden; 
-  }
-  */
-
   .navbar {
     justify-content: space-between;
     padding: 0 5vw;

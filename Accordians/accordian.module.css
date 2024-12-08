@@ -1,7 +1,6 @@
 .accordian {
-  --color: black;
-  --backgroundColor: white;
-  --border: 0.05rem solid black;
+  --backgroundColor: var(--background);
+  --border: var(--smallBorder);
   height: 4.8rem;
   width: 34rem;
   --borderRadius: 0.4rem;
@@ -13,22 +12,10 @@
   filter: brightness(0.96);
 }
 
-@media (prefers-color-scheme: dark) {
-  .accordian {
-    --color: white;
-    --backgroundColor: rgb(40, 40, 40);
-    --border: 0.05rem solid white;
-  }
-
-  .accordian button:hover {
-    filter: brightness(1.2);
-  }
-}
-
 .arrow {
   width: auto;
   height: var(--iconHeight);
-  fill: var(--color);
+  fill: var(--iconColor);
 }
 
 .open .arrow {
