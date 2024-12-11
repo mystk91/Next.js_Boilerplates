@@ -1,0 +1,95 @@
+.card {
+  background-color: var(--background);
+  border: var(--smallBorder);
+  border-radius: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0.3rem 0.6rem 0.4rem 0rem rgba(0, 0, 0, 0.4);
+}
+
+.card > * {
+  padding: 0 7.5%;
+}
+
+.card > *:first-child {
+  margin-top: 2.5%;
+}
+
+.card > *:last-child {
+  margin-bottom: 7.5%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow-y: scroll;
+  margin: 0.8rem 0;
+}
+
+.image {
+  width: 100%;
+  max-height: calc((100% + 3.6rem) / 2.2);
+  min-height: calc((100% + 3.6rem) / 2.2);
+  object-fit: cover;
+  align-self: center;
+}
+
+.headline {
+  all: unset;
+  font-weight: bold;
+  font-size: 2.4rem;
+  padding: 0.6rem 0;
+}
+
+.description {
+  font-size: 1.6rem;
+  margin-bottom: 1.6rem;
+}
+
+.bottom {
+  position: relative;
+}
+
+.card button {
+  all: unset;
+  background-color: var(--softBackground);
+  border: var(--smallBorder);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 0.2rem;
+  height: 3.6rem;
+  min-height: 3.6rem;
+  width: 100%;
+}
+
+.card button:focus-visible {
+  outline: var(--focusOutline);
+  outline-offset: 0.1rem;
+}
+
+.card button:hover {
+  background-color: var(--buttonBackground);
+}
+
+.card button:active {
+  background-color: var(--buttonActiveColor);
+  transform: translateY(0.1rem);
+}
+
+.fade {
+  position: absolute;
+  pointer-events: none;
+  height: 3rem;
+  width: 90%;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--backgroundNumbers), 0) 0%,
+    rgba(var(--backgroundNumbers), 1) 100%
+  );
+  z-index: 1;
+  top: -3.2rem;
+  left: 5%;
+}

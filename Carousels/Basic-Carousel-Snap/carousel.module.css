@@ -1,0 +1,22 @@
+.carousel {
+  display: flex;
+  height: max-content;
+  padding: 0.6rem 1.6rem 1.2rem 1.6rem;
+  overflow-x: scroll;
+  background-color: var(--pageBackground);
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+}
+
+.carousel > * {
+  scroll-snap-align: start;
+}
+
+/* Hiding Scrollbar  */
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+.carousel {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -1,0 +1,60 @@
+.carousel_container {
+  display: flex;
+  flex-direction: column;
+}
+
+.carousel {
+  display: flex;
+  height: max-content;
+  padding: 0.6rem 1.6rem 1.2rem 1.6rem;
+  overflow-x: scroll;
+  background-color: var(--pageBackground);
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+}
+
+.carousel > * {
+  scroll-snap-align: start;
+}
+
+/* Hiding Scrollbar  */
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+.carousel {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.carousel_controls {
+  display: flex;
+  padding-bottom: 0.8rem;
+}
+
+.carousel_controls button {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 6rem;
+  width: max-content;
+  padding: 0 1.6rem;
+}
+
+.carousel_controls button:focus-visible {
+  outline: var(--focusOutline);
+}
+
+.carousel_controls button svg {
+  height: 50%;
+  width: auto;
+}
+
+button.back {
+  border-right: 0.05rem solid var(--borderColor);
+}
+
+button.back svg {
+  transform: rotateZ(180deg);
+}
