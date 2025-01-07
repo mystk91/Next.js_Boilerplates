@@ -1,0 +1,94 @@
+.tooltip_wrapper {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+
+.tooltip {
+  pointer-events: none;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  height: max-content;
+  opacity: 0;
+  transition: opacity 0.5s;
+  z-index: 100;
+}
+
+.tooltip.appear {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+.tooltip_message {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.8rem 0.6rem;
+  text-align: center;
+  text-wrap: pretty;
+}
+
+.arrow_before,
+.arrow_after {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.tooltip[data-direction="top"] .arrow_before {
+  top: 100%;
+}
+
+.tooltip[data-direction="top"] .arrow_after {
+  top: 99.9%;
+}
+
+.tooltip[data-direction="right"] .arrow_before {
+  right: 100%;
+}
+
+.tooltip[data-direction="right"] .arrow_after {
+  right: 99.9%;
+}
+
+.tooltip[data-direction="bottom"] .arrow_before {
+  bottom: 100%;
+}
+
+.tooltip[data-direction="bottom"] .arrow_after {
+  bottom: 99.9%;
+}
+
+.tooltip[data-direction="left"] .arrow_before {
+  left: 100%;
+}
+
+.tooltip[data-direction="left"] .arrow_after {
+  left: 99.9%;
+}
+
+.tooltip[data-arrowposition="left"] .arrow_before,
+.tooltip[data-arrowposition="left"] .arrow_after {
+  left: 10%;
+}
+
+.tooltip[data-arrowposition="right"] .arrow_before,
+.tooltip[data-arrowposition="right"] .arrow_after {
+  right: 10%;
+}
+
+.tooltip[data-arrowposition="top"] .arrow_before,
+.tooltip[data-arrowposition="top"] .arrow_after {
+  top: 10%;
+}
+
+.tooltip[data-arrowposition="bottom"] .arrow_before,
+.tooltip[data-arrowposition="bottom"] .arrow_after {
+  bottom: 10%;
+}
