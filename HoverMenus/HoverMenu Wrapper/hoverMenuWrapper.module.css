@@ -1,0 +1,89 @@
+.hoverMenuWrapper {
+  position: relative;
+}
+
+.hoverMenu {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  height: max-content;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+  transition: opacity 0.5s;
+  z-index: 100;
+}
+
+.hoverMenu.appear {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.arrow_before,
+.arrow_after {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.hoverMenu[data-direction="top"] .arrow_before {
+  top: 99.9%;
+}
+
+.hoverMenu[data-direction="top"] .arrow_after {
+  top: 99.9%;
+}
+
+.hoverMenu[data-direction="right"] .arrow_before {
+  right: 99.9%;
+}
+
+.hoverMenu[data-direction="right"] .arrow_after {
+  right: 99.9%;
+}
+
+.hoverMenu[data-direction="bottom"] .arrow_before {
+  bottom: 99.9%;
+}
+
+.hoverMenu[data-direction="bottom"] .arrow_after {
+  bottom: 99.9%;
+}
+
+.hoverMenu[data-direction="left"] .arrow_before {
+  left: 99.9%;
+}
+
+.hoverMenu[data-direction="left"] .arrow_after {
+  left: 99.9%;
+}
+
+.hoverMenu[data-arrowposition="left"] .arrow_before,
+.hoverMenu[data-arrowposition="left"] .arrow_after {
+  left: 10%;
+}
+
+.hoverMenu[data-arrowposition="right"] .arrow_before,
+.hoverMenu[data-arrowposition="right"] .arrow_after {
+  right: 10%;
+}
+
+.hoverMenu[data-arrowposition="top"] .arrow_before,
+.hoverMenu[data-arrowposition="top"] .arrow_after {
+  top: 10%;
+}
+
+.hoverMenu[data-arrowposition="bottom"] .arrow_before,
+.hoverMenu[data-arrowposition="bottom"] .arrow_after {
+  bottom: 10%;
+}

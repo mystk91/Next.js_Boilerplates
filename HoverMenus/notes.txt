@@ -1,0 +1,20 @@
+
+These are Hover Menu's that can appear on any side of an element. You can control their offset and how much they are shifted. 
+
+You could easily refactor this for onClick instead of mouseOver. 
+
+HoverMenuWrapper surrounds a child you want to have a menu.
+HoverMenu isn't a wrapper, and must be placed inside the element you want to have a menu.
+
+Folders
+HoverMenu - not a wrapper, takes parentRef and children input, you have to be careful with CSS in the parent component so it doesn't spill down to the children. has a 5% extra shift relative to parent created by the calculations when you use it
+
+HoverMenu 2 - not a wrapper, has a 0% extra shift. its just a "left: 0" for example
+
+HoverMenu 3 - lets you control the extra shift
+
+HoverMenuWrapper - hover menu created by a wrapper, has a 5% extra shift relative to children created by the calculations when you use it
+
+HoverMenuWrapper 2 - has a 0% extra shift. its just a "left: 0" for example
+
+HoverMenuWrapper 3 - lets you control the extra shift

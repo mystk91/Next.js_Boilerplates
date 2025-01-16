@@ -6,59 +6,55 @@ import React, {
   useCallback,
   ReactNode,
 } from "react";
-import styles from "./tooltip.module.css";
+import styles from "./hoverMenuWrapper.module.css";
 import classNames from "classnames";
 
-/*  Creates a basic tooltip for its child components, has modifiable attributes. All units in rem.
- *    children - the elements which the tooltip appears on
- *    direction - the direction which the tooltip will appear relative to its children
- *    arrow? - adds an arrow to the tooltip pointing towards the child elements
+/*  Displays a menu when you hover over the child element
+ *    children - the items which the hover event will be given to
+ *    content - the inputed menu component / html
+ *    direction - the direction which the menu will appear
+ *    arrow? - adds an arrow to the menu pointing towards the child elements
  *    arrowPosition? - the horizontal or vertical position of the arrow, should be perpendicular of "direction"
- *    shift?         - shifts the tooltip towards one side of its children, should be opposite of "arrowPosition"
+ *    centeredArrow? - will let the arrow be at the center of the children when true
+ *    shift?         - shifts the menu towards one side, should be opposite of "arrowPosition"
  */
-interface TooltipProps {
+interface HoverMenuProps {
   children: React.ReactNode;
-  message: string;
+  content: React.ReactNode;
   direction: "top" | "right" | "bottom" | "left";
   offset?: number;
   delay?: number;
-  fontSize?: number;
-  height?: string;
-  width?: string;
-  maxWidth?: string;
-  color?: string;
   backgroundColor?: string;
   borderWidth?: number;
   borderColor?: string;
-  borderRadius?: number;
   arrow?: boolean;
   arrowPosition?: "middle" | "top" | "right" | "left" | "bottom";
+  centeredArrow?: boolean;
   shift?: "middle" | "top" | "right" | "left" | "bottom";
   arrowLength?: number;
   arrowWidth?: number;
+  role?: string;
+  ariaLabel?: string;
 }
 
-export default function Tooltip({
+export default function HoverMenuProps({
   children,
-  message = "",
+  content,
   direction = "bottom",
   offset = 0.0,
   delay = 0,
-  fontSize = 1.4,
-  height = "max-content",
-  width = "max-content",
-  maxWidth = "18.0rem",
-  color = "var(--foreground)",
   backgroundColor = "var(--background)",
   borderWidth = 0.1,
   borderColor = "var(--borderColor)",
-  borderRadius = 0,
   arrow = false,
   arrowPosition = "middle",
+  centeredArrow = false,
   shift = "middle",
   arrowLength = 0.0,
   arrowWidth = 0.0,
-}: TooltipProps) {
+  role = "menu",
+  ariaLabel = "Menu",
+}: HoverMenuProps) {
   const [active, setActive] = useState(false);
 
   const [offsetStyles, setOffsetStyles] = useState({
@@ -68,13 +64,13 @@ export default function Tooltip({
     left: "",
   });
 
-  const tooltipRef = useRef<null | HTMLDivElement>(null);
+  const hoverMenuRef = useRef<null | HTMLDivElement>(null);
   const childrenRef = useRef<null | HTMLDivElement>(null);
   const [appear, setAppear] = useState(false);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  //Adds the tooltip after an optional delay
-  function addTooltip() {
+  //Adds the menu after an optional delay
+  function addMenu() {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
@@ -82,8 +78,8 @@ export default function Tooltip({
     timerRef.current = setTimeout(() => setAppear(true), 1 + delay);
   }
 
-  //Removes the tooltip
-  function removeTooltip() {
+  //Removes the menu
+  function removeMenu() {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
@@ -91,7 +87,7 @@ export default function Tooltip({
     timerRef.current = setTimeout(() => setActive(false), 500);
   }
 
-  //Clears timer when we dismount
+  //Clears the timer
   useEffect(() => {
     return () => {
       if (timerRef.current) {
@@ -102,64 +98,47 @@ export default function Tooltip({
 
   //Moves the tooltip to one of the sides when it becomes active
   useEffect(() => {
-    if (tooltipRef.current && childrenRef.current) {
+    if (hoverMenuRef.current && childrenRef.current) {
       let offsetCopy = { ...offsetStyles };
       const offsets = {
-        top:
-          (tooltipRef.current.clientHeight +
-            arrowLength * 10 +
-            offset * 10 +
-            borderWidth * 10) /
-          10,
-        bottom:
-          (tooltipRef.current.clientHeight +
-            arrowLength * 10 +
-            offset * 10 +
-            borderWidth * 10) /
-          10,
-        right:
-          (tooltipRef.current.clientWidth +
-            arrowLength * 10 +
-            offset * 10 +
-            borderWidth * 10) /
-          10,
-        left:
-          (tooltipRef.current.clientWidth +
-            arrowLength * 10 +
-            offset * 10 +
-            borderWidth * 10) /
-          10,
+        top: (hoverMenuRef.current.clientHeight + borderWidth * 10) / 10,
+        bottom: (hoverMenuRef.current.clientHeight + borderWidth * 10) / 10,
+        right: (hoverMenuRef.current.clientWidth + borderWidth * 10) / 10,
+        left: (hoverMenuRef.current.clientWidth + borderWidth * 10) / 10,
       };
       offsetCopy[direction] = `-${offsets[direction]}rem`;
       if (shift !== "middle") {
-        const shifts = {
-          top:
-            childrenRef.current.clientHeight / 2 -
-            tooltipRef.current.clientHeight / 10 -
-            arrowWidth * 10,
-          bottom:
-            childrenRef.current.clientHeight / 2 -
-            tooltipRef.current.clientHeight / 10 -
-            arrowWidth * 10,
-          right:
-            childrenRef.current.clientWidth / 2 -
-            tooltipRef.current.clientWidth / 10 -
-            arrowWidth * 10,
-          left:
-            childrenRef.current.clientWidth / 2 -
-            tooltipRef.current.clientWidth / 10 -
-            arrowWidth * 10,
-        };
-        const shiftDirections: Record<
+        const directions: Record<
           "top" | "right" | "bottom" | "left",
           "top" | "right" | "bottom" | "left"
         > = {
-          top: "bottom",
+          top: "top",
           right: "left",
-          bottom: "top",
+          bottom: "bottom",
           left: "right",
         };
-        offsetCopy[shiftDirections[shift]] = `${shifts[shift] / 10}rem`;
+        offsetCopy[directions[shift]] = `0rem`;
+      } else {
+        const shifts = {
+          top:
+            childrenRef.current.clientHeight / 2 -
+            hoverMenuRef.current.clientHeight / 2,
+          left:
+            childrenRef.current.clientWidth / 2 -
+            hoverMenuRef.current.clientWidth / 2,
+        };
+        const adjacentDirections: Record<
+          "top" | "right" | "bottom" | "left",
+          "top" | "left"
+        > = {
+          top: "left",
+          right: "top",
+          bottom: "left",
+          left: "top",
+        };
+        offsetCopy[adjacentDirections[direction]] = `${
+          shifts[adjacentDirections[direction]] / 10
+        }rem`;
       }
       setOffsetStyles(offsetCopy);
     }
@@ -185,9 +164,28 @@ export default function Tooltip({
       bottom: [`transparent`, `transparent`, borderColor, `transparent`],
       left: [`transparent`, `transparent`, `transparent`, borderColor],
     };
+    if (!childrenRef.current) return {};
+    const divisor = centeredArrow ? 20 : 50;
+    const shifts = {
+      middle: {},
+      top: {
+        bottom: `${childrenRef.current.clientHeight / divisor - arrowWidth}rem`,
+      },
+      right: {
+        right: `${childrenRef.current.clientWidth / divisor - arrowWidth}rem`,
+      },
+      bottom: {
+        top: `${childrenRef.current.clientHeight / divisor - arrowWidth}rem`,
+      },
+      left: {
+        left: `${childrenRef.current.clientWidth / divisor - arrowWidth}rem`,
+      },
+    };
+
     return {
       borderWidth: borderWidths[direction].join(" "),
       borderColor: borderColors[direction].join(" "),
+      ...shifts[arrowPosition],
     };
   }
 
@@ -227,67 +225,84 @@ export default function Tooltip({
     };
     let transforms = {
       middle: "",
-      top: `translateY(${borderWidth}rem)`,
-      bottom: `translateY(-${borderWidth}rem)`,
+      top: `translateY(-${borderWidth}rem)`,
+      bottom: `translateY(${borderWidth}rem)`,
       right: `translateX(-${borderWidth}rem)`,
       left: `translateX(${borderWidth}rem)`,
     };
+
+    if (!childrenRef.current) return {};
+    const divisor = centeredArrow ? 20 : 50;
+    const shifts = {
+      middle: {},
+      top: {
+        bottom: `${childrenRef.current.clientHeight / divisor - arrowWidth}rem`,
+      },
+      right: {
+        right: `${childrenRef.current.clientWidth / divisor - arrowWidth}rem`,
+      },
+      bottom: {
+        top: `${childrenRef.current.clientHeight / divisor - arrowWidth}rem`,
+      },
+      left: {
+        left: `${childrenRef.current.clientWidth / divisor - arrowWidth}rem`,
+      },
+    };
+
     return {
       borderWidth: borderWidths[direction].join(" "),
       borderColor: borderColors[direction].join(" "),
       transform: transforms[arrowPosition],
+      ...shifts[arrowPosition],
     };
   }
 
   return (
-    <div className={styles.tooltip_wrapper}>
+    <div
+      className={styles.hoverMenuWrapper}
+      onMouseOver={addMenu}
+      onMouseLeave={removeMenu}
+    >
       {active && (
         <div
-          ref={tooltipRef}
-          className={classNames(styles.tooltip, {
+          ref={hoverMenuRef}
+          className={classNames(styles.hoverMenu, {
             [styles.appear]: appear,
           })}
           data-direction={direction}
           data-arrowposition={arrowPosition}
-          role="tooltip"
+          role={role}
+          aria-label={ariaLabel}
           style={{
-            backgroundColor: backgroundColor,
-            border: `${borderWidth}rem solid ${borderColor}`,
-            borderRadius: `${borderRadius}rem`,
+            paddingTop:
+              direction === "bottom" ? `${arrowLength + offset}rem` : "",
+            paddingRight:
+              direction === "left" ? `${arrowLength + offset}rem` : "",
+            paddingBottom:
+              direction === "top" ? `${arrowLength + offset}rem` : "",
+            paddingLeft:
+              direction === "right" ? `${arrowLength + offset}rem` : "",
             ...offsetStyles,
           }}
         >
-          {arrow ? (
-            <>
-              <div
-                className={styles.arrow_before}
-                style={arrowBeforeStyle()}
-              ></div>
-              <div
-                className={styles.arrow_after}
-                style={arrowAfterStyle()}
-              ></div>
-            </>
-          ) : null}
-          <div
-            className={styles.tooltip_message}
-            style={{
-              minHeight: height,
-              width: width,
-              maxWidth: maxWidth,
-              fontSize: `${fontSize}rem`,
-              color: color,
-            }}
-          >
-            {message}
+          <div className={styles.content}>
+            {arrow ? (
+              <>
+                <div
+                  className={styles.arrow_before}
+                  style={arrowBeforeStyle()}
+                ></div>
+                <div
+                  className={styles.arrow_after}
+                  style={arrowAfterStyle()}
+                ></div>
+              </>
+            ) : null}
+            {content}
           </div>
         </div>
       )}
-      <div
-        onMouseOver={addTooltip}
-        onMouseLeave={removeTooltip}
-        ref={childrenRef}
-      >
+      <div ref={childrenRef} aria-expanded={active}>
         {children}
       </div>
     </div>
