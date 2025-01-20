@@ -1,0 +1,12 @@
+.progress_bar {
+  display: flex;
+  justify-content: flex-start;
+  height: 4rem;
+  width: 20rem;
+  background-color: var(--softBackground);
+  border: var(--smallBorder);
+}
+
+.percent {
+  background-color: rgb(0, 129, 17);
+}
