@@ -28,6 +28,7 @@
   margin: auto 2vw;
   cursor: default;
   max-width: 95vw;
+  width: max-content;
   position: relative;
 }
 

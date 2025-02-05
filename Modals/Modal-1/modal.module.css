@@ -6,7 +6,7 @@
   top: 0;
   left: 0;
   display: flex;
-  justify-content: center;
+  align-items: center;
   z-index: 100;
   cursor: pointer;
   overflow-y: scroll;
@@ -21,6 +21,7 @@
   margin: auto 2vw;
   cursor: default;
   max-width: 95vw;
+  width: max-content;
   position: relative;
 }
 

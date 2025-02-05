@@ -1,0 +1,55 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tabs {
+  display: flex;
+  position: relative;
+  overflow-x: scroll;
+  max-width: 100vw;
+  white-space: nowrap;
+  align-items: center;
+}
+
+.tab {
+  all: unset;
+  cursor: pointer;
+  font-size: 1.4rem;
+  height: max-content;
+  width: max-content;
+  margin: 0 0.8rem;
+  padding: 0.4rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-wrap: pretty;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.tab.active {
+  cursor: auto;
+}
+
+.underlay {
+  position: absolute;
+  opacity: 0.4;
+  height: 1.8rem;
+  border-radius: 0.8rem;
+  background-color: rgb(160, 160, 160);
+  transition: left 0.2s, width 0.2s;
+  animation: appear 1.2s;
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+    height: 0;
+  }
+  100% {
+  }
+}
+
