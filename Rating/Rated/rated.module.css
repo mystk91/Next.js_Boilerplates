@@ -1,0 +1,22 @@
+.rating {
+  display: flex;
+}
+
+.emptyStar,
+.halfStar,
+.fullStar {
+  height: 4rem;
+  width: 4rem;
+}
+
+.emptyStar {
+  fill: rgb(181, 189, 20);
+}
+
+.halfStar {
+  fill: rgb(181, 189, 20);
+}
+
+.fullStar {
+  fill: rgb(181, 189, 20);
+}

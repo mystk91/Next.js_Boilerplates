@@ -1,0 +1,28 @@
+.rating {
+  display: flex;
+  height: 4rem;
+  width: 20rem; /* Star width multiplied by stars */
+}
+
+.rating button {
+  all: unset;
+}
+
+.emptyStar,
+.fullStar {
+  height: 4rem;
+  width: 4rem;
+}
+
+.black {
+  fill: rgb(0, 0, 0);
+}
+
+.pending {
+  fill: rgb(205, 210, 110);
+  cursor: pointer;
+}
+
+.gold {
+  fill: rgb(181, 189, 20);
+}

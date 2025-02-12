@@ -1,0 +1,87 @@
+.button {
+  --buttonColor: rgb(45, 104, 200);
+  all: unset;
+  cursor: pointer;
+  height: 4rem;
+  width: 16rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.8rem;
+  border-radius: 0.8rem;
+  box-shadow: 0px 2px 1px 1px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s;
+}
+
+.button:active {
+  transform: translateY(0.04rem) scale(0.98);
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.3);
+}
+
+.primary {
+  border: 0.2rem solid rgba(0, 0, 0, 0);
+  font-weight: bolder;
+  color: white;
+  background-color: var(--buttonColor);
+  transition: all 0.2s;
+}
+
+.primary:hover {
+  background-color: rgb(27, 83, 173);
+}
+
+.secondary {
+  border: 0.2rem solid var(--buttonColor);
+  color: var(--buttonColor);
+  font-weight: bolder;
+  background-color: white;
+  transition: all 0.2s;
+}
+
+.secondary:hover {
+  background-color: rgb(245, 245, 245);
+}
+
+.tertiary {
+  background-color: transparent;
+  border: 0.1rem solid rgba(0, 0, 0, 0.4);
+  color: rgba(0, 0, 0, 0.8);
+  transition: all 0.2s;
+}
+
+.tertiary:hover {
+  border-color: var(--buttonColor);
+  color: rgba(0, 0, 0, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .primary {
+    background-color: rgb(75, 150, 255);
+  }
+
+  .primary:hover {
+    background-color: rgb(47, 117, 215);
+  }
+
+  .secondary {
+    border-color: rgb(75, 150, 255);
+    background-color: rgb(30, 30, 30);
+    color: white;
+  }
+
+  .secondary:hover {
+    background-color: rgb(50, 50, 50);
+  }
+
+  .tertiary {
+    background-color: transparent;
+    border: 0.1rem solid rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .tertiary:hover {
+    background-color: transparent;
+    border-color: var(--buttonColor);
+    color: rgba(255, 255, 255);
+  }
+}
