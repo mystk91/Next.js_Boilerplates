@@ -1,0 +1,105 @@
+.pagination {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 2rem;
+  padding: 4rem 0 8rem 0;
+}
+
+.current_page {
+  font-weight: bolder;
+  font-size: 2rem;
+}
+
+.pagination_menu {
+  display: flex;
+  align-items: center;
+  column-gap: 1.6rem;
+  font-family: 1.6rem;
+  color: (--foreground);
+}
+
+.pagination_menu a {
+  color: var(--linkColor);
+}
+
+.arrow {
+  font-size: 2rem;
+}
+
+.sort_options_container {
+  display: flex;
+  justify-content: flex-end;
+  width: 90vw;
+  max-width: 120rem;
+}
+
+.sort_options {
+  display: flex;
+}
+
+.sort_option {
+  padding: 0.6rem;
+  border: var(--smallBorder);
+  width: 8rem;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--background);
+}
+
+.sort_option.active {
+  background-color: var(--buttonBackground);
+}
+
+.error_message {
+  display: flex;
+  justify-content: center;
+  font-size: 1.6rem;
+  width: 100%;
+  padding: 2rem;
+}
+
+.items_container {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 90vw;
+  max-width: 120rem;
+  column-gap: 4rem;
+  row-gap: 2rem;
+}
+
+.item_info {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0.6rem;
+  padding-top: 0.6rem;
+}
+
+.item_info > div {
+  display: flex;
+  column-gap: 0.4rem;
+}
+
+.info_label {
+  font-weight: bold;
+}
+
+.link_container {
+  width: 24rem;
+  height: 13.5rem;
+  background-position: center center;
+  background-size: 24rem 13.5rem;
+}
+
+.link_container a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}

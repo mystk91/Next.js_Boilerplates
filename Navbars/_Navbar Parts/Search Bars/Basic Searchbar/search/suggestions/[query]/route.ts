@@ -26,12 +26,12 @@ export async function GET(
       { label: "North Carolina", href: "/search?q=North+Carolina" },
     ];
 
-    const { query } = await params;
-
     const results: { label: string; href: string }[] = [];
     let maxSuggestions = 5;
     for (const suggestion of suggestions) {
-      if (suggestion.label.toLowerCase().startsWith(query.toLowerCase())) {
+      if (
+        suggestion.label.toLowerCase().startsWith(params.query.toLowerCase())
+      ) {
         results.push(suggestion);
         maxSuggestions--;
         if (maxSuggestions === 0) {
