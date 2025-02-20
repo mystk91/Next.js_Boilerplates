@@ -26,7 +26,7 @@ export default function Pagination() {
     try {
       const res = await fetch(`/api/pagination?${searchParams}`);
       const data = await res.json();
-      if (data.errors) return;
+      if (data.errors) throw new Error();
       setItems(data.items);
       setPage(data.page);
       setNumPages(data.numPages);
