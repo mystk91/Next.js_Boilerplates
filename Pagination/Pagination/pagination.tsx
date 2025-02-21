@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 export default function Pagination() {
   const DEFAULT_PAGE_SIZE = 12;
   const DEFAULT_SORT = "newest";
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<{}[]>([]);
   const [page, setPage] = useState(1);
   const [isError, setIsError] = useState(false);
   const [numPages, setNumPages] = useState(0);
