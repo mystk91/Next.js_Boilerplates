@@ -1,12 +1,17 @@
 .button {
   --buttonColor: rgb(45, 104, 200);
   all: unset;
+  box-sizing: border-box;
   cursor: pointer;
-  height: 4rem;
+  height: max-content;
+  min-height: 4rem;
   width: 16rem;
+  padding: 0.2rem 0.4rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  text-wrap: pretty;
   font-size: 1.8rem;
   border-radius: 0.8rem;
   box-shadow: 0px 2px 1px 1px rgba(0, 0, 0, 0.3);
