@@ -4,6 +4,7 @@ import Link from "next/link";
 import styles from "./pagination.module.css";
 import classNames from "classnames";
 import { useSearchParams } from "next/navigation";
+import Button from "../Buttons/Button Set 1/button";
 
 export default function Pagination() {
   const DEFAULT_PAGE_SIZE = 12;
@@ -18,7 +19,6 @@ export default function Pagination() {
 
   useEffect(() => {
     getItems();
-    return () => {};
   }, [searchParams]);
 
   //Fetches items from the backend
@@ -27,11 +27,13 @@ export default function Pagination() {
       const res = await fetch(`/api/pagination?${searchParams}`);
       const data = await res.json();
       if (data.errors) throw new Error();
+      //if (0 == Math.floor(Math.random() * 3)) throw new Error();
       setItems(data.items);
       setPage(data.page);
       setNumPages(data.numPages);
       setSort(data.sort);
       setPageSize(data.pageSize);
+      if (isError) setIsError(false);
     } catch (error) {
       setIsError(true);
     }
@@ -106,10 +108,12 @@ export default function Pagination() {
     if (endPage == numPages) {
       startPage = Math.max(numPages - 2 * range, 1);
     }
-    if (page > 1 + range && numPages > 2 * range + 1) {
+    if (page > 1) {
       menuArr.push(
         menuLink("<", page - 1, "left-arrow", "arrow", "Previous page")
       );
+    }
+    if (page > 1 + range && numPages > 2 * range + 1) {
       menuArr.push(menuLink("1", 1, `page-1`));
       if (startPage > 2) {
         menuArr.push(
@@ -149,6 +153,8 @@ export default function Pagination() {
         );
       }
       menuArr.push(menuLink(`${numPages}`, numPages, `page-${numPages}`));
+    }
+    if (page < numPages) {
       menuArr.push(
         menuLink(">", page + 1, "right-arrow", "arrow", "Next Page")
       );
@@ -206,15 +212,18 @@ export default function Pagination() {
   return isError ? (
     <div className={styles.pagination}>
       <div className={styles.sort_options_container}>{sortOptions()}</div>
-      <div
-        className={styles.error_message}
-      >{`This content couldn't be shown to you at this time.`}</div>
+      <div className={styles.error_container}>
+        <div
+          className={styles.error_message}
+        >{`Something went wrong loading...`}</div>
+        <Button text="Retry" type="secondary" onClick={getItems} />
+      </div>
     </div>
-  ) : (
+  ) : numPages ? (
     <div className={styles.pagination}>
       <div className={styles.sort_options_container}>{sortOptions()}</div>
       {pageItems()}
       {paginationMenu()}
     </div>
-  );
+  ) : null;
 }
