@@ -1,0 +1,55 @@
+.badge {
+  --height: 30rem;
+  --width: 20rem;
+  --userNameFont: 1.6rem;
+  border: var(--smallBorder);
+  border-radius: 0.8rem;
+  max-width: var(--width);
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.6rem;
+  height: var(--height);
+  max-height: var(--height);
+  width: var(--width);
+  min-width: var(--width);
+  padding: calc(var(--height) / 20) calc(var(--width) / 20);
+}
+
+.badge > * {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.avatar {
+  height: calc(var(--height) / 3);
+}
+
+.avatar > img {
+  border-radius: var(--width);
+  height: 100%;
+  width: auto;
+}
+
+.username {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  font-size: var(--userNameFont);
+  font-weight: bolder;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  text-wrap: balance;
+  row-gap: 0.2rem;
+  font-family: "Lato", "Figtree", "Inter", sans-serif;
+  font-size: 1.4rem;
+  font-weight: lighter;
+  height: 100%;
+  overflow-y: auto;
+}

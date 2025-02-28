@@ -1,0 +1,72 @@
+.badge {
+  --height: 9rem;
+  --width: 27rem;
+  --userNameFont: 1.6rem;
+  max-width: var(--width);
+  display: flex;
+  column-gap: 0.8rem;
+  height: var(--height);
+  max-height: var(--height);
+  width: var(--width);
+  min-width: var(--width);
+  padding: calc(var(--height) / 36);
+}
+
+.avatar {
+  display: flex;
+  position: relative;
+  height: 100%;
+}
+
+.avatar > img {
+  border-radius: var(--height);
+  height: 100%;
+  width: auto;
+}
+
+.status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  --statusHeight: calc(var(--height) * 2 / 8);
+  height: var(--statusHeight);
+  width: var(--statusHeight);
+  border-radius: var(--statusHeight);
+  --boxShadowLength: calc(var(--statusHeight) / 10);
+  box-shadow: var(--boxShadowLength) var(--boxShadowLength)
+    var(--boxShadowLength) 0px rgba(0, 0, 0, 0.5);
+}
+
+.online {
+  background-color: green;
+}
+
+.away {
+  background-color: darkgoldenrod;
+}
+
+.offline {
+  background-color: brown;
+}
+
+.profile {
+  height: 100%;
+}
+
+.username {
+  font-size: var(--userNameFont);
+  font-weight: bolder;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  font-family: "Lato", "Figtree", "Inter", sans-serif;
+  font-size: 1.4rem;
+  font-weight: lighter;
+  padding-left: 0.2rem;
+  height: calc(
+    var(--height) - 2 * calc(var(--height) / 36) - var(--userNameFont)
+  );
+  overflow-y: auto;
+}
