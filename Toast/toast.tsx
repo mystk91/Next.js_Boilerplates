@@ -12,12 +12,20 @@ import InfoIcon from "./info_icon";
 import NewsIcon from "./news_icon";
 import CloseIcon from "./close_icon";
 
+/*
+ *   type - the type of message being sent (come in different color schemes)
+ *   message - the message on the toast
+ *   closeFunction - a function the closes the toast, typically used by toastify
+ *   title - optional title that overrides our default titles, leave undefined for defaults
+ *   autoClose - toast will autoClose after the duration expire
+ *   duration - the time in ms before toast autoCloses
+ */
 interface ToastProps {
   type: "success" | "warning" | "error" | "info" | "news";
   message: string;
   closeFunction: () => void;
   title?: string;
-  persists?: boolean;
+  autoClose?: boolean;
   duration?: number;
 }
 
@@ -42,12 +50,12 @@ export default function Toast({
   message,
   closeFunction,
   title,
-  persists = true,
-  duration = 3000,
+  autoClose = true,
+  duration = 5000,
 }: ToastProps) {
   title = title === undefined ? titles[type] : title;
   useEffect(() => {
-    if (!persists) {
+    if (autoClose) {
       const timer = setTimeout(closeFunction, duration);
       return () => clearTimeout(timer);
     }

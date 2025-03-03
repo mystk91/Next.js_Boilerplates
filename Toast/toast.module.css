@@ -4,7 +4,6 @@
   --buttonWidth: 1.6rem;
   height: var(--height);
   width: var(--width);
-  border: var(--smallBorder);
   color: var(--wb);
   display: flex;
   justify-content: flex-start;
@@ -12,7 +11,9 @@
   position: relative;
   border-radius: 0.4rem;
   padding: calc(var(--height) / 20) 0;
-  margin-bottom: 0.2rem;
+  margin-bottom: calc(var(--height) / 40);
+  box-shadow: 0.4rem calc(var(--height) / 40) calc(var(--width) / 40) 0px
+    rgba(0, 0, 0, 0.6);
 }
 
 .toast.success {
@@ -32,6 +33,7 @@
 }
 
 .toast.news {
+  border: var(--smallBorder);
   background-color: var(--softBackground);
   color: var(--foreground);
 }
