@@ -1,0 +1,78 @@
+.app_icon {
+  --height: 9.6rem;
+  --iconWidth: 6.4rem;
+  width: var(--height);
+  height: var(--height);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  row-gap: 0.4rem;
+}
+
+.app_icon > * {
+  width: 100%;
+}
+
+.button_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.button_wrapper > button {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  height: var(--iconWidth);
+  width: var(--iconWidth);
+  position: relative;
+  transform: scale(1);
+  transition: transform 0.2s;
+}
+
+.button_wrapper > button:hover {
+  transform: scale(1.03);
+  transition: transform 0.2s;
+}
+
+.notifications {
+  position: absolute;
+  top: -1.2rem;
+  right: -1.2rem;
+  color: white;
+  background-color: brown;
+  font-weight: bolder;
+  font-size: calc(var(--iconWidth) / 4);
+  text-align: center;
+  padding: 0.4rem 0.8rem;
+  border-radius: 1.6rem;
+  z-index: 1;
+}
+
+.icon_container {
+  z-index: 0;
+  filter: brightness(1);
+  transition: filter 0.2s;
+}
+
+.icon_container > * {
+  width: var(--iconWidth);
+  height: var(--iconWidth);
+  object-fit: cover;
+  object-position: center center;
+  border-radius: calc(var(--iconWidth) / 4);
+}
+
+.icon_container:hover {
+  filter: brightness(1.05);
+  transition: filter 0.2s;
+}
+
+.app_name {
+  font-size: 1.4rem;
+  height: calc(var(--width)) / 6;
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+  user-select: none;
+}

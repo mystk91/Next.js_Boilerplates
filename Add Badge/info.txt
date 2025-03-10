@@ -1,0 +1,3 @@
+
+Add Badge - adds a badge base on the tags component, very simple badges
+Add Custom Badge - lets you input your own component onto the badge

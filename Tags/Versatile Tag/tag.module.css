@@ -1,0 +1,71 @@
+.tag {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: var(--smallBorder);
+  min-width: max-content;
+  padding: 0 1.2rem;
+  user-select: none;
+  column-gap: 0.8rem;
+}
+
+.tag:hover {
+  filter: brightness(0.96);
+}
+
+.tag.pill {
+  border-radius: 12rem;
+}
+
+.tag.small {
+  height: 3rem;
+  font-size: 1.5rem;
+}
+
+.tag.medium {
+  height: 4rem;
+  min-width: 9rem;
+  font-size: 1.7rem;
+}
+
+.tag.large {
+  height: 5rem;
+  min-width: 12rem;
+  font-size: 2.4rem;
+}
+
+.close_button {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.2rem;
+}
+
+.close_button.small {
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
+.close_button.medium {
+  height: 1.4rem;
+  width: 1.4rem;
+}
+
+.close_button.large {
+  height: 1.6rem;
+  width: 1.6rem;
+}
+
+.close_button > svg {
+  height: 100%;
+  width: 100%;
+  fill: black;
+}
+
+.close_button:focus > svg {
+  outline: 1px solid var(--linkColor);
+  outline-offset: 2px;
+}
