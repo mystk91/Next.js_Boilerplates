@@ -18,7 +18,7 @@ export default function Error({
   return (
     <div className={styles.error} role="alert" aria-live="assertive">
       <h1>Something went wrong! Going up to error.tsx!</h1>
-      <Button text={`Try again`} type={"primary"} onClick={reset} />
+      <Button text={`Try again`} variant={"primary"} onClick={reset} />
     </div>
   );
 }

@@ -38,7 +38,7 @@ export default function Badge({ name, description, src }: BadgeProps) {
         })}
       </div>
       <div className={styles.button_container}>
-        <Button type={"primary"} text={"View Profile"} onClick={() => {}} />
+        <Button variant={"primary"} text={"View Profile"} onClick={() => {}} />
       </div>
     </div>
   );

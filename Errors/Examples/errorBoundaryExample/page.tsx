@@ -17,7 +17,7 @@ const FaultyComponent = () => {
   return (
     <Button
       text={"Make an error happen!"}
-      type={"secondary"}
+      variant={"secondary"}
       onClick={handleClick}
     />
   );

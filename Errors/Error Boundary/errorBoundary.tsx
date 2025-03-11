@@ -26,7 +26,7 @@ class ErrorBoundary extends Component<
       return (
         <div className={styles.error} role="alert" aria-live="assertive">
           <h1>Something went wrong!</h1>
-          <Button text="Try again" type="primary" onClick={this.resetError} />
+          <Button text="Try again" variant="primary" onClick={this.resetError} />
         </div>
       );
     }

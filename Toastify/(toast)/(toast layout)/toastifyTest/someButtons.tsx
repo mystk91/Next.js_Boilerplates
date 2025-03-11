@@ -15,13 +15,13 @@ export default function Component() {
       }}
     >
       <Button
-        type="primary"
+        variant="primary"
         text="Add Success Toast"
         onClick={() => createToast("success", "A toast! Cheers!")}
         style={{backgroundColor: "darkolivegreen"}}
       />
       <Button
-        type="primary"
+        variant="primary"
         text="Add Warning"
         onClick={() => {
           createToast(
@@ -34,7 +34,7 @@ export default function Component() {
         style={{backgroundColor: "goldenrod"}}
       />
       <Button
-        type="primary"
+        variant="primary"
         text="Some News"
         onClick={() =>
           createToast("news", "We have a new feature. Check it out!")

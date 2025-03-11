@@ -216,7 +216,7 @@ export default function Pagination() {
         <div
           className={styles.error_message}
         >{`Something went wrong loading...`}</div>
-        <Button text="Retry" type="secondary" onClick={getItems} />
+        <Button text="Retry" variant="secondary" onClick={getItems} />
       </div>
     </div>
   ) : numPages ? (

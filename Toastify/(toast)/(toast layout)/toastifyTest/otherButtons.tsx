@@ -15,20 +15,20 @@ export default function Component() {
       }}
     >
       <Button
-        type="primary"
+        variant="primary"
         text="Error! Error!"
         onClick={() => createToast("error", "You messed something up!")}
         style={{ backgroundColor: "brown" }}
       />
       <Button
-        type="primary"
+        variant="primary"
         text="Add Warning"
         onClick={() => {
           createToast("info", "Here is some information.", undefined, false);
         }}
       />
       <Button
-        type="primary"
+        variant="primary"
         text="Another Success "
         onClick={() => {
           createToast("success", "We succeeded again!");

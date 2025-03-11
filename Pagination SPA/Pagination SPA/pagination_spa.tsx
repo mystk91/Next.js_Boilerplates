@@ -252,7 +252,7 @@ export default function PaginationSpa() {
         <div
           className={styles.error_message}
         >{`This content couldn't be shown to you at this time.`}</div>
-        <Button text="Retry" type="secondary" onClick={getItems} />
+        <Button text="Retry" variant="secondary" onClick={getItems} />
       </div>
     </div>
   ) : numPages ? (

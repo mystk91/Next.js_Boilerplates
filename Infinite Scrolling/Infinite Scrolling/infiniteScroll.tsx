@@ -152,7 +152,7 @@ export default function InfiniteScroll() {
         <div
           className={styles.error_message}
         >{`Something went wrong additional items...`}</div>
-        <Button text="Retry" type="secondary" onClick={getItems} />
+        <Button text="Retry" variant="secondary" onClick={getItems} />
       </div>
     </div>
   ) : (

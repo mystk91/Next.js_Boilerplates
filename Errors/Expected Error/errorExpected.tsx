@@ -9,7 +9,7 @@ export default function ExpectedError({ reset }: { reset: () => void }) {
   return (
     <div className={styles.error} role="alert" aria-live="assertive">
       <h1>Something went wrong loading more stuff.</h1>
-      <Button text={`Try again`} type={"primary"} onClick={reset} />
+      <Button text={`Try again`} variant={"primary"} onClick={reset} />
     </div>
   );
 }

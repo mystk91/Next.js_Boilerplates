@@ -26,7 +26,7 @@ export default function GlobalError({
       >
         <div className={styles.error} role="alert" aria-live="assertive">
           <h1>We had a global error!</h1>
-          <Button text="Try again" type="primary" onClick={reset} />
+          <Button text="Try again" variant="primary" onClick={reset} />
         </div>
       </body>
     </html>
