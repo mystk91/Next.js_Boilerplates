@@ -27,6 +27,7 @@
 
 .closeButton {
   all: unset;
+  box-sizing: border-box;
   background-color: var(--buttonBackground);
   border: var(--smallBorder);
   height: 12px;

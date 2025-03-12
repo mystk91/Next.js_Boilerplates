@@ -43,7 +43,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  text-shadow: 0px 0px .2rem #000000;
+  text-shadow: 0px 0px 0.2rem #000000;
 }
 
 .active {
@@ -62,6 +62,7 @@
 
   .menuButton {
     all: unset;
+    box-sizing: border-box;
     display: flex;
     justify-self: flex-start;
     justify-content: center;
@@ -113,7 +114,6 @@
     filter: invert();
     background-color: transparent;
     transition: transform 0.2s;
-    
   }
 
   .menuIcon.open {

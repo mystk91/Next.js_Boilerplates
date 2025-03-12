@@ -6,6 +6,7 @@
 
 .rating button {
   all: unset;
+  box-sizing: border-box;
 }
 
 .emptyStar,

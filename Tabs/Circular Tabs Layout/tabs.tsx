@@ -5,10 +5,9 @@ import styles from "./tabs.module.css";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-interface TabsProps {
-}
+interface TabsProps {}
 
-export default function Tabs({  }: TabsProps) {
+export default function Tabs({}: TabsProps) {
   // Creates a ref array to hold the button elements for each tab
   const tabRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const links: { href: string; label: string }[] = [];
@@ -34,19 +33,19 @@ export default function Tabs({  }: TabsProps) {
     }
   }
   const [currentTab, setCurrentTab] = useState(initialTab);
-  const [underlayStyle, setUnderlayStyle] = useState({
+  const [indicatorStyle, setIndicatorStyle] = useState({
     width: tabRefs.current[currentTab]?.clientWidth,
     left: tabRefs.current[currentTab]?.offsetLeft,
   });
 
-  // Moves the underlay
+  // Moves the indicator
   useEffect(() => {
     const tabElement = tabRefs.current[currentTab];
     if (tabElement) {
       const rect = tabElement.getBoundingClientRect();
       const parent = tabElement.parentElement;
       const parentRect = parent?.getBoundingClientRect();
-      setUnderlayStyle({
+      setIndicatorStyle({
         width: rect.width + 12,
         left: rect.left - parentRect!.left + parent!.scrollLeft - 6,
       });
@@ -71,12 +70,11 @@ export default function Tabs({  }: TabsProps) {
             aria-controls={`tabpanel-${index}`}
             aria-selected={currentTab === index}
           >
-            {link.label}
+            <div className={styles.tab_label}>{link.label}</div>
           </Link>
         ))}
-        <div className={styles.underlay} style={underlayStyle}></div>
+        <div className={styles.indicator} style={indicatorStyle}></div>
       </div>
-  
     </div>
   );
 }

@@ -37,6 +37,7 @@
 
 .headline {
   all: unset;
+  box-sizing: border-box;
   font-weight: bold;
   font-size: 2.4rem;
   padding: 0.6rem 0;
@@ -53,6 +54,7 @@
 
 .card button {
   all: unset;
+  box-sizing: border-box;
   background-color: var(--softBackground);
   border: var(--smallBorder);
   display: flex;

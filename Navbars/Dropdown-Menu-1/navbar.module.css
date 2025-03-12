@@ -60,6 +60,7 @@
 
   .menuButton {
     all: unset;
+    box-sizing: border-box;
     display: flex;
     justify-self: flex-start;
     justify-content: center;

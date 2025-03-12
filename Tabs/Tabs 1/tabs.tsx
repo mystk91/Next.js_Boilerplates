@@ -30,19 +30,19 @@ export default function Tabs({}: TabsProps) {
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const [currentTab, setCurrentTab] = useState(0);
-  const [underlineStyle, setUnderlineStyle] = useState({
+  const [indicatorStyle, setIndicatorStyle] = useState({
     width: tabRefs.current[currentTab]?.clientWidth,
     left: tabRefs.current[currentTab]?.offsetLeft,
   });
 
-  // Moves the underline
+  // Moves the indicator
   useEffect(() => {
     const tabElement = tabRefs.current[currentTab];
     if (tabElement) {
       const rect = tabElement.getBoundingClientRect();
       const parent = tabElement.parentElement;
       const parentRect = parent?.getBoundingClientRect();
-      setUnderlineStyle({
+      setIndicatorStyle({
         width: rect.width,
         left: rect.left - parentRect!.left + parent!.scrollLeft,
       });
@@ -56,7 +56,7 @@ export default function Tabs({}: TabsProps) {
           "Overview",
           "Details",
           "Actions",
-          "This is a long tab",
+          "This is a long tab with too many words",
           "Summary",
           "Analyze",
           "More Words",
@@ -74,10 +74,10 @@ export default function Tabs({}: TabsProps) {
             aria-controls={`tabpanel-${index}`}
             aria-selected={currentTab === index}
           >
-            {label}
+            <div className={styles.tab_label}>{label}</div>
           </button>
         ))}
-        <div className={styles.underline} style={underlineStyle}></div>
+        <div className={styles.indicator} style={indicatorStyle}></div>
       </div>
 
       <div className={styles.tab_panels}>

@@ -37,6 +37,7 @@
 
 .searchForm button {
   all: unset;
+  box-sizing: border-box;
   cursor: pointer;
   background-color: rgb(230, 230, 230);
   min-width: 5.4rem;
@@ -167,6 +168,7 @@ button .searchIcon {
 
   .openButton {
     all: unset;
+    box-sizing: border-box;
     cursor: pointer;
     background-color: rgb(255, 255, 255);
     min-width: 4.8rem;
@@ -187,6 +189,7 @@ button .searchIcon {
 
   .closeButton {
     all: unset;
+    box-sizing: border-box;
     cursor: pointer;
     background-color: rgb(255, 255, 255);
     min-width: 4.8rem;

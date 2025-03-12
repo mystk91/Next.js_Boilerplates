@@ -81,6 +81,7 @@
 
 .toggle_password {
   all: unset;
+  box-sizing: border-box;
   background-color: var(--buttonBackground);
   border: var(--smallBorder);
   display: flex;

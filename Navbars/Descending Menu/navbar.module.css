@@ -56,6 +56,7 @@
 
 .navItem button {
   all: unset;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -104,6 +105,7 @@
 
   .menuButton {
     all: unset;
+    box-sizing: border-box;
     display: flex;
     justify-self: flex-start;
     justify-content: center;
@@ -158,6 +160,7 @@
 
   .navMenu .navMenu {
     all: unset;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     position: relative;

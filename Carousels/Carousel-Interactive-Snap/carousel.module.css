@@ -33,6 +33,7 @@
 
 .carousel_controls button {
   all: unset;
+  box-sizing: border-box;
   cursor: pointer;
   display: flex;
   justify-content: center;

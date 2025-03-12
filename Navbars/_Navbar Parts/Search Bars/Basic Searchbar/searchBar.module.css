@@ -32,6 +32,7 @@
 
 .searchForm button {
   all: unset;
+  box-sizing: border-box;
   background-color: var(--buttonBackground);
   cursor: pointer;
   min-width: 5.4rem;
