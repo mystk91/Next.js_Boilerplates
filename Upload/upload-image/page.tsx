@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import UploadForm from "@/app/ui/Upload Form/Upload Image/uploadForm";
 
@@ -11,11 +11,14 @@ export default function Page() {
   async function getImages() {
     const res = await fetch("/api/upload/displayImages");
     const data = await res.json();
-    console.log(data);
     if (data.images) {
       setImages(data.images);
     }
   }
+
+  useEffect(() => {
+    getImages();
+  }, []);
 
   return (
     <div className={styles.page}>
