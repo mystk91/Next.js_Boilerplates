@@ -1,0 +1,17 @@
+.page {
+  display: flex;
+  width: 100vw;
+  padding: 4rem 0;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 2.4rem;
+}
+
+.images_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  width: 90%;
+}
+
+.image_wrapper {
+}
