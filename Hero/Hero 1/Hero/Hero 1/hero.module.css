@@ -1,0 +1,116 @@
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100vw;
+  height: 48rem;
+  min-height: 48rem;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.hero > * {
+  width: 100%;
+}
+
+.background_wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image: url("/images/wallpapers/wallpaper25.jpg");
+  background-position: center -24rem;
+  background-repeat: no-repeat;
+  background-color: rgb(19, 26, 43);
+  filter: brightness(0.65);
+}
+
+/*    Window effect 
+.background_wrapper::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 48rem;
+  background-image: url("/images/wallpapers/wallpaper25.jpg");
+  background-position: center -24rem;
+  background-repeat: no-repeat;
+  background-color: rgb(19, 26, 43);
+  transform: translateZ(0); 
+  will-change: transform;
+}
+*/
+
+.hero_content_wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  width: min(100vw, 144rem);
+  row-gap: 2.4rem;
+  height: 100%;
+  padding: 0 1.2rem;
+}
+
+.nav_wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.heading_wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 1.2rem;
+  color: white;
+  text-align: center;
+  text-wrap: pretty;
+  text-shadow: 2px 2px 2px #000000;
+  animation: appear 0.6s;
+}
+
+.heading_wrapper h1,
+.heading_wrapper h2 {
+  all: unset;
+  box-sizing: border-box;
+}
+
+.heading_wrapper h1 {
+  font-size: 4.8rem;
+  font-family: "Crimson Text";
+  font-weight: bolder;
+}
+
+.heading_wrapper h2 {
+  font-size: 2.4rem;
+  font-family: "Urbanist";
+  font-style: italic;
+  font-weight: bolder;
+}
+
+.buttons_wrapper {
+  display: flex;
+  justify-content: center;
+  column-gap: 1.2rem;
+}
+
+.heading_wrapper,
+.buttons_wrapper {
+  animation: 0.6s appear;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(3rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

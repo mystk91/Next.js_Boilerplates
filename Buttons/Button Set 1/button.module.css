@@ -62,6 +62,9 @@
 
 .primary:hover {
   background-color: rgb(27, 83, 173);
+  /*
+  filter: brightness(1.1); 
+  */
 }
 
 .secondary {

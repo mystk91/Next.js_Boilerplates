@@ -1,12 +1,13 @@
 .footer {
   display: flex;
   justify-content: center;
-  height: max-content;
+  align-items: flex-start;
+  height: 100%;
   width: 100vw;
   background-color: rgb(198, 209, 227);
   padding: 3.2rem 1.6rem;
   font-size: 1.6rem;
-  border-top: 0.2rem solid rgb(113, 143, 190);
+  border-top: 0.05rem solid rgb(113, 143, 190);
   font-family: "Inter", sans-serif;
   color: black;
 }
