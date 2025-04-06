@@ -9,7 +9,7 @@ interface UserProps {
   style?: React.CSSProperties;
 }
 
-export default function Hero({ style }: UserProps) {
+export default function User({ style }: UserProps) {
   //componentDidMount, runs when component mounts, then componentDismount
   useEffect(() => {
     return () => {};
