@@ -15,6 +15,7 @@ interface ButtonProps {
   type?: "button" | "submit" | "reset";
   form?: string;
   name?: string;
+  title?: string;
   disabled?: boolean;
   autoFocus?: boolean;
   tabIndex?: number;
@@ -33,6 +34,7 @@ export default function Button({
   type = "button",
   form,
   name,
+  title,
   disabled = false,
   autoFocus = false,
   tabIndex,
@@ -129,6 +131,7 @@ export default function Button({
       ref={buttonRef}
       id={id}
       name={name}
+      title={title}
       className={classNames(styles.button, styles[variant], styles[width], {
         [styles.active]: active,
       })}
