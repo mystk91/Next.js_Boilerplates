@@ -7,8 +7,11 @@
   left: 0;
   display: flex;
   align-items: center;
+  justify-content: center;
   z-index: 100;
+  /*
   cursor: pointer;
+  */
   overflow-y: scroll;
   padding: 2vh 0 25vh;
 }
@@ -17,10 +20,11 @@
   border: var(--smallBorder);
   background-color: var(--background);
   height: max-content;
-  padding: 20px 24px 20px 24px;
+  padding: 3rem 2.4rem 1.2rem 2.4rem;
   margin: auto 2vw;
   cursor: default;
   max-width: 95vw;
+  min-width: max-content;
   width: max-content;
   position: relative;
 }
@@ -30,18 +34,18 @@
   box-sizing: border-box;
   background-color: var(--buttonBackground);
   border: var(--smallBorder);
-  height: 12px;
-  width: 12px;
+  height: 2.4rem;
+  width: 2.4rem;
+  padding: 0.6rem;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 2rem;
   cursor: pointer;
-  border-radius: 25px;
-  padding: 12px;
+  border-radius: 1.2rem;
   position: absolute;
-  right: 12px;
-  top: 12px;
+  right: 1.2rem;
+  top: 1.2rem;
 }
 
 .closeButton:focus {

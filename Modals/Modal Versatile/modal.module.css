@@ -9,25 +9,43 @@
   align-items: center;
   justify-content: center;
   z-index: 100;
-  cursor: pointer;
   overflow-y: scroll;
   padding: 2vh 0 25vh;
+}
+.pointer {
+  cursor: pointer;
+}
+
+.transparent {
+  background-color: transparent;
+}
+
+.centered {
+  padding: 0 0 0 0;
 }
 
 .modal {
   border: var(--smallBorder);
   background-color: var(--background);
   height: max-content;
-  padding: 3rem 2.4rem 1.2rem 2.4rem;
+  padding: 1.2rem 2.4rem 1.2rem 2.4rem;
   margin: auto 2vw;
   cursor: default;
   max-width: 95vw;
-  min-width: max-content;
   width: max-content;
+  min-width: max-content;
   position: relative;
 }
 
-.closeButton {
+.top_padding {
+  padding-top: 3rem;
+}
+
+.extra_top_padding {
+  padding-top: 3.6rem;
+}
+
+.close_button {
   all: unset;
   box-sizing: border-box;
   background-color: var(--buttonBackground);
@@ -44,17 +62,16 @@
   position: absolute;
   right: 1.2rem;
   top: 1.2rem;
-  z-index: 101;
 }
 
-.closeIcon {
-  fill: var(--iconColor);
+.close_button:focus {
+  outline: 0.1rem solid var(--foreground);
+  background-color: var(--buttonHoverColor);
+}
+
+.close_icon {
   height: 100%;
   width: 100%;
   pointer-events: none;
-}
-
-.closeButton:focus {
-  outline: 1px solid var(--foreground);
-  background-color: var(--buttonHoverColor);
+  fill: var(--iconColor);
 }

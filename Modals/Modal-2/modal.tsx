@@ -8,7 +8,7 @@ import React, {
   useContext,
 } from "react";
 import styles from "./modal.module.css";
-import FocusTrap from "focus-trap-react";
+import { FocusTrap } from "focus-trap-react";
 
 /* A flexible modal component that displays inputed content
  * children - the content that will be on the modal

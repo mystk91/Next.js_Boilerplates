@@ -17,6 +17,7 @@ interface ButtonProps {
   name?: string;
   title?: string;
   disabled?: boolean;
+  draggable?: boolean;
   autoFocus?: boolean;
   tabIndex?: number;
   id?: string;
@@ -36,6 +37,7 @@ export default function Button({
   name,
   title,
   disabled = false,
+  draggable = false,
   autoFocus = false,
   tabIndex,
   id,
@@ -146,6 +148,7 @@ export default function Button({
       type={type}
       form={form}
       disabled={disabled}
+      draggable={draggable}
       autoFocus={autoFocus}
       tabIndex={tabIndex}
       style={{ ...style }}
