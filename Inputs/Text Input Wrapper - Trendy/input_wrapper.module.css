@@ -1,0 +1,12 @@
+.input_wrapper {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  row-gap: 0.4rem;
+}
+
+.error {
+  font-size: 1.2rem;
+  color: brown;
+  padding-left: 0.8rem;
+}
