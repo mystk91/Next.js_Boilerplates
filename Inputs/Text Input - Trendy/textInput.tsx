@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import styles from "./textInput.module.css";
 
 interface TextInputProps {
+  id: string,
+  name: string,
   label: string;
   type?: "text" | "password";
   value?: string;
@@ -11,6 +13,7 @@ interface TextInputProps {
   maxLength?: number;
   ariaDescribedBy?: string;
   togglePassword?: boolean;
+  autocomplete?: string;
   style?: React.CSSProperties;
 }
 
@@ -39,6 +42,8 @@ const closedEyeSVG = (
 );
 
 export default function TextInput({
+  id,
+  name,
   label,
   value,
   type = "text",
@@ -47,6 +52,7 @@ export default function TextInput({
   maxLength,
   ariaDescribedBy,
   togglePassword = false,
+  autocomplete,
   style,
 }: TextInputProps) {
   const ref = inputRef ?? useRef<HTMLInputElement>(null);
@@ -68,14 +74,14 @@ export default function TextInput({
   return (
     <div className={styles.input_wrapper} style={style}>
       <label
-        htmlFor={label}
+        htmlFor={id}
         className={labelMoved ? styles.moved : styles.initial}
       >
         {label}
       </label>
       <input
-        id={label}
-        name={label}
+        id={id}
+        name={name}
         type={togglePassword ? (passwordVisible ? "text" : "password") : type}
         value={value}
         maxLength={maxLength}
@@ -84,6 +90,7 @@ export default function TextInput({
         onFocus={moveLabelUp}
         onBlur={moveLabelDown}
         aria-describedby={ariaDescribedBy}
+        autoComplete={autocomplete}
       />
       {togglePassword && (
         <button

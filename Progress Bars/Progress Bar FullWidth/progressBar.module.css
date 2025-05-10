@@ -11,4 +11,5 @@
 .percent {
   background-color: rgb(0, 129, 17);
   border-radius: 1rem;
+  transition: width .4s;
 }

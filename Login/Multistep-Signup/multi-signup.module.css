@@ -1,0 +1,70 @@
+.signup_wrapper {
+  height: 50vh;
+  width: 100vw;
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+
+.panel_wrapper {
+  --panelWidth: 36rem;
+  width: var(--panelWidth);
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  align-items: center;
+  animation: slideLeft 0.5s;
+  animation-timing-function: ease-out;
+  right: calc(50vw - var(--panelWidth) / 2);
+}
+
+.panel {
+  width: 100%;
+  padding: 1.8rem 3.6rem 1.8rem;
+  border: var(--smallBorder);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 1.8rem;
+}
+
+.panel > form {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 1.8rem;
+}
+
+.inputs_wrapper {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 0.8rem;
+}
+
+@keyframes slideLeft {
+  0% {
+    right: calc(0rem - var(--panelWidth));
+  }
+  100% {
+    right: calc(50vw - var(--panelWidth) / 2);
+  }
+}
+
+.closing {
+  right: 100vw;
+  transition: right 0.5s ease-in;
+}
+
+.success_message {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.4rem;
+  text-align: center;
+  width: 36rem;
+}

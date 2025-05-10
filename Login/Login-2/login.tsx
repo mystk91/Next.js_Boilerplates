@@ -43,11 +43,12 @@ export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   // State for form data and errors
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [formErrors, setFormErrors] = useState({
-    email: null as React.ReactNode | null,
-    password: null as React.ReactNode | null,
-  });
+  const form = {
+    email: "",
+    password: "",
+  };
+  const [formData, setFormData] = useState(form);
+  const [formErrors, setFormErrors] = useState(form);
 
   // Handle input changes
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -58,6 +59,7 @@ export default function Login() {
   // Handle login submission
   async function login(e: React.FormEvent) {
     e.preventDefault();
+    setFormErrors(form);
     if (validate()) {
       try {
         const options = {
@@ -65,48 +67,22 @@ export default function Login() {
           body: JSON.stringify(formData),
           headers: { "Content-Type": "application/json" },
         };
-        const resLogin = await fetch(loginURL, options);
-        const dataLogin = await resLogin.json();
+        const res = await fetch(loginURL, options);
+        const data = await res.json();
         //console.log(dataLogin);
-        if (!dataLogin.errors) {
+        if (!data.errors) {
           setFormErrors({
-            email: null,
-            password: null,
+            email: ``,
+            password: ``,
           });
           //router.push(successLink);
         } else {
-          setFormErrors({
-            email: dataLogin.errors.email ? (
-              <div className={styles.error} id="emailError" aria-live="polite">
-                {dataLogin.errors.email}
-              </div>
-            ) : null,
-            password: dataLogin.errors.password ? (
-              <div
-                className={styles.error}
-                id="passwordError"
-                role="alert"
-                aria-live="polite"
-              >
-                {dataLogin.errors.password}
-              </div>
-            ) : null,
-          });
+          setFormErrors(data.errors);
         }
       } catch {
-        setFormErrors({
-          email: null,
-          password: (
-            <div
-              className={styles.error}
-              id="emailError"
-              role="alert"
-              aria-live="polite"
-            >
-              {`A network error has occurred`}
-            </div>
-          ),
-        });
+        let errors = { ...form };
+        errors.password = `A network error has occurred`;
+        setFormErrors(errors);
       }
     }
   }
@@ -124,14 +100,9 @@ export default function Login() {
       !emailRegExp.test(formData.email) ||
       !passwordRegExp.test(formData.password)
     ) {
-      setFormErrors({
-        email: null,
-        password: (
-          <div className={styles.error} id="emailError" aria-live="polite">
-            {`Incorrect username or password`}
-          </div>
-        ),
-      });
+      let errors = { ...form };
+      errors.password = `Incorrect username or password`;
+      setFormErrors(errors);
       return false;
     } else return true;
   }
@@ -157,7 +128,11 @@ export default function Login() {
               aria-describedby="emailError"
             />
           </div>
-          {formErrors.email}
+          {formErrors.email && (
+            <div className={styles.error} id="emailError" aria-live="polite">
+              {formErrors.email}
+            </div>
+          )}
         </div>
         <div>
           <label htmlFor="password">{`Password`}</label>
@@ -183,7 +158,11 @@ export default function Login() {
               {passwordVisible ? eyeSVG : closedEyeSVG}
             </button>
           </div>
-          {formErrors.password}
+          {formErrors.password && (
+            <div className={styles.error} id="passwordError" aria-live="polite">
+              {formErrors.password}
+            </div>
+          )}
           <a
             href="/recover-password"
             className={styles.forgot_password}

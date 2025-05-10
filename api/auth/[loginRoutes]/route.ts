@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import nodemailer from "nodemailer";
 
-//Different PUT routes related to login / account creation
+//Different PUT routes related to login
 export async function PUT(
   req: NextRequest,
   { params }: { params: { loginRoutes: string } }
@@ -23,15 +23,18 @@ export async function PUT(
   }
 }
 
-//Different POST routes related to login / account creation
+//Different POST routes related account creation
 export async function POST(
   req: NextRequest,
   { params }: { params: { loginRoutes: string } }
 ) {
   try {
+    console.log("we started");
     switch (params.loginRoutes) {
       case "sendVerification":
         return await sendVerification(req);
+      case "verifyEmail":
+        return await verifyEmail(req);
       default:
         return networkError();
     }
@@ -70,6 +73,12 @@ function success() {
     success: true,
   });
 }
+//Response for when the task fails
+function failure() {
+  return NextResponse.json({
+    errors: "Unable to complete the requested action",
+  });
+}
 //Error for when api route breaks during something like a database operation
 function networkError() {
   return NextResponse.json({
@@ -98,20 +107,50 @@ async function getValues(
   database: string,
   field: string,
   value: string,
-  fields: string[]
+  fields?: string[]
 ) {
   try {
-    let result: Record<string, any> = {};
     /**
      * Implement DB-logic to retrieve the values here, placeholder below
      *
      */
-    result.userName = "somebody@gmail.com";
-    result.password =
-      "$2a$10$rKVzaEJI8uJsbIUbCcMPOu8r57.HJfu4odFFsLqT7ucQt8tWF98mC";
+    let result: Record<string, any> = {
+      email: "somebody@gmail.com",
+      password: "$2a$10$rKVzaEJI8uJsbIUbCcMPOu8r57.HJfu4odFFsLqT7ucQt8tWF98mC",
+      code: "markon",
+    };
     return result;
   } catch {
     return {};
+  }
+}
+
+// Searches a database for all entries with a value and retrieves the values of the inputed fields
+// database - the name of the database to search through
+// field - the parameter used to search the DB for the account
+// value - the value of that parameter
+// fields - the name of the fields you want the values of
+async function getAllValues(
+  database: string,
+  field: string,
+  value: string,
+  fields?: string[]
+) {
+  try {
+    /**
+     * Implement DB-logic to retrieve the values here, placeholder below
+     *
+     */
+    let result: Record<string, any>[] = [];
+    result.push({
+      email: "somebody@gmail.com",
+      password: "$2a$10$rKVzaEJI8uJsbIUbCcMPOu8r57.HJfu4odFFsLqT7ucQt8tWF98mC",
+      code: "markon",
+      date: Date.now(),
+    });
+    return result;
+  } catch {
+    return [];
   }
 }
 
@@ -120,11 +159,13 @@ async function getValues(
 // field - the parameter used to search the DB for the account
 // value - the value of that parameter
 // update - an object with parameter / value pairs
+// updateOne - only updates first entry found by default
 async function updateValues(
   database: string,
   field: string,
   value: string,
-  update: Record<string, any>
+  update: Record<string, any>,
+  updateOne = true
 ) {
   try {
     /**
@@ -152,6 +193,28 @@ async function addEntries(database: string, ...entries: Record<string, any>[]) {
   }
 }
 
+// Removes entries from a database
+// database - the name of the database we're removing entries from
+// field - the parameter used to search the DB for the account
+// value - the value of that parameter
+// removeOne - only removes the first entry found by default
+async function removeEntries(
+  database: string,
+  field: string,
+  value: string,
+  removeOne = true
+) {
+  try {
+    /*
+     *  Implement DB-logic to add entries to database
+     *
+     */
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 //Attempts to log user in
 async function login(req: NextRequest) {
   try {
@@ -165,7 +228,7 @@ async function login(req: NextRequest) {
       "Accounts",
       "email",
       body.email.toLowerCase(),
-      ["password"]
+      ["email", "password"]
     );
     if (!user) {
       bcrypt.compare(
@@ -177,7 +240,7 @@ async function login(req: NextRequest) {
     //Logs in user if password is correct
     if (await bcrypt.compare(body.password, user.password)) {
       const sessionId = generateString(48);
-      await updateValues("Accounts", "email", user.username, {
+      await updateValues("Accounts", "email", user.email, {
         sessionId: sessionId,
       });
       const cookieStore = cookies();
@@ -232,33 +295,29 @@ async function sendVerification(req: NextRequest) {
     } else if (body.password !== body.verifyPassword) {
       errors.password = `Passwords do not match`;
     }
-    if (errors.email || errors.password) {
+    const errorFound = Object.values(errors).some(Boolean);
+    if (errorFound) {
       return NextResponse.json({
-        errors: { email: errors.email, password: errors.password },
+        errors: errors,
       });
     }
     //Checks to see if account already exists
-    let duplicateAccount = await getValues("Accounts", "email", body.email, [
-      "email",
-    ]);
-    if (duplicateAccount) {
+    const duplicateAccount = await getValues("Accounts", "email", body.email);
+    //Checks to see if user is requesting too many verification emails
+    const spamCheck = await getAllValues("Unverifieds", "email", body.email);
+    if (duplicateAccount || spamCheck.length > 5) {
       //Returns a false positive but doesn't send any emails
       return success();
     } else {
       const verificationCode = generateString(32);
-      bcrypt.hash(body.password, 10, async (err, hashedPassword) => {
-        try {
-          const user = {
-            email: body.email.toLowerCase(),
-            password: hashedPassword,
-            code: verificationCode,
-            date: Date.now(),
-          };
-          await addEntries("Unverifieds", user);
-        } catch (err) {
-          return networkError();
-        }
-      });
+      const hashedPassword = await bcrypt.hash(body.password, 10);
+      const user = {
+        email: body.email.toLowerCase(),
+        password: hashedPassword,
+        code: verificationCode,
+        date: Date.now(),
+      };
+      await addEntries("Unverifieds", user);
       const transporter = nodemailer.createTransport({
         /*
          *  Add Email Provider Here
@@ -275,11 +334,57 @@ async function sendVerification(req: NextRequest) {
       };
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-          return networkError();
+          return networkErrorPassword();
         } else {
           return success();
         }
       });
+    }
+  } catch {
+    return networkErrorPassword();
+  }
+}
+
+// Verifies the user's email and creates their account
+async function verifyEmail(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const unverifieds = await getAllValues("Unverifieds", "code", body.code, [
+      "email",
+      "password",
+      "code",
+      "date",
+    ]);
+    if (!unverifieds) {
+      return failure();
+    }
+    // Get the most recent verification code
+    unverifieds.sort((a, b) => b.date - a.date);
+    const account = unverifieds[0];
+    // Verify code matches
+    if (account.code === body.code) {
+      // Remove old verification codes
+      await removeEntries("Unverifieds", "email", account.email, false);
+      // Check if account already exists in Accounts collection
+      const existingAccount = await getValues(
+        "Accounts",
+        "email",
+        account.email
+      );
+      if (existingAccount) {
+        return failure();
+      } else {
+        // Create the account
+        await addEntries("Accounts", {
+          email: account.email,
+          password: account.password,
+          dateCreated: new Date(),
+          // Add additional fields if needed
+        });
+        return success();
+      }
+    } else {
+      return failure();
     }
   } catch {
     return networkError();

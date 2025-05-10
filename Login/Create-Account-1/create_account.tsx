@@ -43,18 +43,18 @@ export default function CreateAccount() {
   //Password visibility
   const [passwordVisible, setPasswordVisible] = useState(false);
   // State for form data and errors
-  const [formData, setFormData] = useState({
+  const initialForm = {
     email: "",
     password: "",
     verifyPassword: "",
-  });
+  };
+  const [formData, setFormData] = useState(initialForm);
   const handleChange = useFormUpdater(setFormData);
-  const [formErrors, setFormErrors] = useState({
-    email: null as React.ReactNode | null,
-    password: (
-      <div className={styles.input_subtext}>{`Enter a strong password`}</div>
-    ) as React.ReactNode | null,
-  });
+  const initialErrors = {
+    email: "",
+    password: "",
+  };
+  const [formErrors, setFormErrors] = useState(initialErrors);
 
   // Handle login submission
   async function createAccount(e: React.FormEvent) {
@@ -66,43 +66,17 @@ export default function CreateAccount() {
           body: JSON.stringify(formData),
           headers: { "Content-Type": "application/json" },
         };
-        const resCreate = await fetch(createAccountURL, options);
-        const dataCreate = await resCreate.json();
-        if (!dataCreate.errors) {
+        const res = await fetch(createAccountURL, options);
+        const data = await res.json();
+        if (!data.errors) {
           setScreen("success");
         } else {
-          setFormErrors({
-            email: dataCreate.errors.email ? (
-              <div className={styles.error} id="emailError" aria-live="polite">
-                {dataCreate.errors.email}
-              </div>
-            ) : null,
-            password: dataCreate.errors.password ? (
-              <div
-                className={styles.error}
-                id="passwordError"
-                role="alert"
-                aria-live="polite"
-              >
-                {dataCreate.errors.password}
-              </div>
-            ) : null,
-          });
+          setFormErrors(data.errors);
         }
       } catch {
-        setFormErrors({
-          email: null,
-          password: (
-            <div
-              className={styles.error}
-              id="emailError"
-              role="alert"
-              aria-live="polite"
-            >
-              {`A network error has occurred`}
-            </div>
-          ),
-        });
+        let errors = { ...initialErrors };
+        errors.password = `A network error has occurred`;
+        setFormErrors(errors);
       }
     }
   }
@@ -115,132 +89,147 @@ export default function CreateAccount() {
     const passwordRegExp = new RegExp(
       "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*[!@#$%^&*_0-9]).{8,32}$"
     );
-    let errors = {
-      email: null as React.ReactNode | null,
-      password: null as React.ReactNode | null,
-    };
+    let errors = { ...initialErrors };
     //Checks if email address and passwords are valid
     if (!emailRegExp.test(formData.email)) {
-      errors.email = (
-        <div className={styles.error} id="emailError" aria-live="polite">
-          {`Invalid email`}
-        </div>
-      );
+      errors.email = `Invalid email`;
     }
     if (!passwordRegExp.test(formData.password)) {
-      errors.password = (
-        <div className={styles.error} id="emailError" aria-live="polite">
-          {`Make your password stronger`}
-        </div>
-      );
+      errors.password = `Make your password stronger`;
     } else if (formData.password !== formData.verifyPassword) {
-      errors.password = (
-        <div className={styles.error} id="emailError" aria-live="polite">
-          {`Passwords do not match`}
-        </div>
-      );
+      errors.password = `Passwords do not match`;
     }
-    if (!errors.email && !errors.password) {
-      return true;
-    } else {
-      setFormErrors({ email: errors.email, password: errors.password });
+    const errorFound = Object.values(errors).some(Boolean);
+    if (errorFound) {
+      setFormErrors(errors);
       return false;
+    } else {
+      return true;
     }
   }
 
-  return screen === "default" ? (
-    <div
-      className={styles.create_account_container}
-      aria-label="Create Account Container"
-    >
-      <form
-        className={styles.create_account_form}
-        onSubmit={createAccount}
-        aria-label="Create Account Form"
-      >
-        <div>
-          <label htmlFor="email">{`Email`}</label>
-          <div className={styles.input_container}>
-            <input
-              id="email"
-              name="email"
-              type="text"
-              value={formData.email}
-              onChange={handleChange}
-              ref={inputReference}
-              autoComplete="email"
-              aria-describedby="emailError"
-            />
-          </div>
-          {formErrors.email}
+  return (
+    <div>
+      {screen === "default" && (
+        <div
+          className={styles.create_account_container}
+          aria-label="Create Account Container"
+        >
+          <form
+            className={styles.create_account_form}
+            onSubmit={createAccount}
+            aria-label="Create Account Form"
+          >
+            <div>
+              <label htmlFor="email">{`Email`}</label>
+              <div className={styles.input_container}>
+                <input
+                  id="email"
+                  name="email"
+                  type="text"
+                  value={formData.email}
+                  onChange={handleChange}
+                  ref={inputReference}
+                  autoComplete="email"
+                  aria-describedby="emailError"
+                />
+              </div>
+              {formErrors.email && (
+                <div
+                  className={styles.error}
+                  id="emailError"
+                  aria-live="polite"
+                >
+                  {formErrors.email}
+                </div>
+              )}
+            </div>
+            <div>
+              <label htmlFor="password">{`Password`}</label>
+              <div className={styles.input_container}>
+                <input
+                  id="password"
+                  className={styles.password}
+                  name="password"
+                  type={passwordVisible ? "visible" : "password"}
+                  maxLength={32}
+                  value={formData.password}
+                  onChange={handleChange}
+                  autoComplete="current-password"
+                />
+                <button
+                  className={styles.toggle_password}
+                  type="button"
+                  onClick={() => setPasswordVisible(!passwordVisible)}
+                  tabIndex={50}
+                  aria-label={
+                    passwordVisible ? "Hide password" : "Show password"
+                  }
+                  aria-pressed={passwordVisible}
+                >
+                  {passwordVisible ? eyeSVG : closedEyeSVG}
+                </button>
+              </div>
+            </div>
+            <div>
+              <label htmlFor="verifyPassword">{`Verify Password`}</label>
+              <div className={styles.input_container}>
+                <input
+                  id="verifyPassword"
+                  className={styles.password}
+                  name="verifyPassword"
+                  type={passwordVisible ? "visible" : "password"}
+                  maxLength={32}
+                  value={formData.verifyPassword}
+                  onChange={handleChange}
+                  autoComplete="current-password"
+                />
+                <button
+                  className={styles.toggle_password}
+                  type="button"
+                  onClick={() => setPasswordVisible(!passwordVisible)}
+                  tabIndex={50}
+                  aria-label={
+                    passwordVisible ? "Hide password" : "Show password"
+                  }
+                  aria-pressed={passwordVisible}
+                >
+                  {passwordVisible ? eyeSVG : closedEyeSVG}
+                </button>
+              </div>
+              {formErrors.password ? (
+                <div
+                  className={styles.error}
+                  id="emailError"
+                  aria-live="polite"
+                >
+                  {formErrors.password}
+                </div>
+              ) : (
+                <div
+                  className={styles.input_subtext}
+                >{`Enter a strong password`}</div>
+              )}
+            </div>
+            <div>
+              <button type="submit" className={styles.submit_button}>
+                {`Create Account`}
+              </button>
+            </div>
+          </form>
         </div>
-        <div>
-          <label htmlFor="password">{`Password`}</label>
-          <div className={styles.input_container}>
-            <input
-              id="password"
-              className={styles.password}
-              name="password"
-              type={passwordVisible ? "visible" : "password"}
-              maxLength={32}
-              value={formData.password}
-              onChange={handleChange}
-              autoComplete="current-password"
-            />
-            <button
-              className={styles.toggle_password}
-              type="button"
-              onClick={() => setPasswordVisible(!passwordVisible)}
-              tabIndex={50}
-              aria-label={passwordVisible ? "Hide password" : "Show password"}
-              aria-pressed={passwordVisible}
-            >
-              {passwordVisible ? eyeSVG : closedEyeSVG}
-            </button>
-          </div>
+      )}
+      {screen === "success" && (
+        <div
+          className={styles.create_account_container}
+          aria-label="Message Container"
+        >
+          <div
+            className={styles.body_text}
+            aria-live="polite"
+          >{`An account verification link has been sent to your email.`}</div>
         </div>
-        <div>
-          <label htmlFor="verifyPassword">{`Verify Password`}</label>
-          <div className={styles.input_container}>
-            <input
-              id="verifyPassword"
-              className={styles.password}
-              name="verifyPassword"
-              type={passwordVisible ? "visible" : "password"}
-              maxLength={32}
-              value={formData.verifyPassword}
-              onChange={handleChange}
-              autoComplete="current-password"
-            />
-            <button
-              className={styles.toggle_password}
-              type="button"
-              onClick={() => setPasswordVisible(!passwordVisible)}
-              tabIndex={50}
-              aria-label={passwordVisible ? "Hide password" : "Show password"}
-              aria-pressed={passwordVisible}
-            >
-              {passwordVisible ? eyeSVG : closedEyeSVG}
-            </button>
-          </div>
-          {formErrors.password}
-        </div>
-        <div>
-          <button type="submit" className={styles.submit_button}>
-            {`Create Account`}
-          </button>
-        </div>
-      </form>
+      )}
     </div>
-  ) : screen === "success" ? (
-    <div
-      className={styles.create_account_container}
-      aria-label="Message Container"
-    >
-      <div
-        className={styles.body_text}
-        aria-live="polite"
-      >{`An account verification link has been sent to your email.`}</div>
-    </div>
-  ) : null;
+  );
 }

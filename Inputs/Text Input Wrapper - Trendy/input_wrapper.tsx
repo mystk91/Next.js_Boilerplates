@@ -4,6 +4,8 @@ import TextInput from "@/app/ui/Inputs/Text Input - Trendy/textInput";
 import styles from "./input_wrapper.module.css";
 
 interface InputWrapperProps {
+  id: string;
+  name: string;
   label: string;
   type?: "text" | "password";
   value?: string;
@@ -12,10 +14,13 @@ interface InputWrapperProps {
   maxLength?: number;
   ariaDescribedBy?: string;
   togglePassword?: boolean;
+  autocomplete?: string;
   error?: string;
 }
 
 export default function InputWrapper({
+  id,
+  name,
   label,
   type,
   value,
@@ -24,11 +29,14 @@ export default function InputWrapper({
   maxLength,
   ariaDescribedBy,
   togglePassword,
+  autocomplete,
   error,
 }: InputWrapperProps) {
   return (
     <div className={styles.input_wrapper}>
       <TextInput
+        id={id}
+        name={name}
         label={label}
         type={type}
         value={value}
@@ -37,8 +45,11 @@ export default function InputWrapper({
         maxLength={maxLength}
         ariaDescribedBy={ariaDescribedBy}
         togglePassword={togglePassword}
+        autocomplete={autocomplete}
       />
-      <div className={styles.error}>{error}</div>
+      <div className={styles.error} id={ariaDescribedBy} aria-live="polite">
+        {error}
+      </div>
     </div>
   );
 }
