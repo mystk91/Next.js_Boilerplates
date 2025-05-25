@@ -3,8 +3,8 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import styles from "./textInput.module.css";
 
 interface TextInputProps {
-  id: string,
-  name: string,
+  id: string;
+  name: string;
   label: string;
   type?: "text" | "password";
   value?: string;

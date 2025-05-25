@@ -1,0 +1,9 @@
+.wrapper {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  z-index: 100;
+}
+
