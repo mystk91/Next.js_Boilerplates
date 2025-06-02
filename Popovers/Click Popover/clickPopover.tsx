@@ -3,25 +3,30 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import styles from "./clickPopover.module.css";
 import classNames from "classnames";
 import { throttle } from "lodash";
+import { FocusTrap } from "focus-trap-react";
 
 /*  Displays a popover panel when you click over an element
  *    children       - the elements which the click event will be given to
  *    panel          - the inputed panel that will be displayed on click
+ *    panelId?        - id for the panel, also used in aria-describedBy
  *    direction      - the direction which the panel will be anchored to
  *    offset         - adds a gap between the children and the panel, in rem (can be negative also)
  *    shiftRem?      - shifts the panel in rem
- *    shiftChildPercent?  - shifts the panel, by a percent of the children's width / height, 0 to 100
- *    shiftPanelPercent? - shifts the panel, by a percent of the panel's width / height, 0 to 100
+ *    shiftChildPercent?  - shifts the panel, by a percent of the children's width / height
+ *    shiftPanelPercent? - shifts the panel, by a percent of the panel's width / height
  *    fadeEffect?    - plays the default fade in / out animation, default true
  *    closingTime?    - the time it takes for the panel to close, in ms
  *    panelRole?          - the role of the panel
  *    ariaLabelChildren? - the aria label for the children
  *    ariaLabelPanel?   - the aria label for the panel
  *    containerRef   - confines the panel to the boundaries of a container
+ *    focusable?        - default true, allows the component to be tab focused like a button
+ *    focusTrap?      - default true, will place a focus trap on the panel (not needed as badly in this version due to relative positioning)
  */
 interface ClickPopoverProps {
   children: React.ReactNode;
   panel: React.ReactNode;
+  panelId?: string;
   direction: Direction;
   offset?: number;
   shiftRem?: number;
@@ -33,6 +38,8 @@ interface ClickPopoverProps {
   ariaLabelChildren?: string;
   ariaLabelPanel?: string;
   containerRef?: React.RefObject<HTMLElement>;
+  focusable?: boolean;
+  focusTrap?: boolean;
 }
 
 type Side = "top" | "right" | "bottom" | "left";
@@ -71,6 +78,7 @@ const positionObject = {
 export default function ClickPopover({
   children,
   panel,
+  panelId,
   direction,
   offset = 0.0,
   shiftRem = 0.0,
@@ -82,6 +90,8 @@ export default function ClickPopover({
   panelRole = "dialog",
   closingTime = 300,
   containerRef,
+  focusable = true,
+  focusTrap = true,
 }: ClickPopoverProps) {
   const [active, setActive] = useState(false);
   const [closing, setClosing] = useState(false);
@@ -122,15 +132,24 @@ export default function ClickPopover({
   // Remove the panel if the user clicks outside of it
   function handleClick(e: MouseEvent) {
     if (!panelRef.current || !panelRef.current.contains(e.target as Node)) {
+      document.removeEventListener("click", handleClick);
       removePanel();
     }
   }
+
+  //Closes the panel when user hits Escape
+  const escapeKey = useCallback((e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      removePanel();
+    }
+  }, []);
 
   //Moves the panel to one of the sides when it becomes active, adds events for positioning
   useEffect(() => {
     if (active) {
       calculatePosition();
       document.addEventListener("click", handleClick);
+      window.addEventListener("keydown", escapeKey);
       if (containerRef) {
         window.addEventListener("resize", throttledCalculatePosition);
         window.addEventListener("scroll", throttledCalculatePosition);
@@ -138,9 +157,13 @@ export default function ClickPopover({
           window.removeEventListener("resize", throttledCalculatePosition);
           window.removeEventListener("scroll", throttledCalculatePosition);
           document.removeEventListener("click", handleClick);
+          window.removeEventListener("keydown", escapeKey);
         };
       } else {
-        document.removeEventListener("click", handleClick);
+        return () => {
+          document.removeEventListener("click", handleClick);
+          window.removeEventListener("keydown", escapeKey);
+        };
       }
     }
   }, [active]);
@@ -150,7 +173,7 @@ export default function ClickPopover({
     throttle(() => {
       calculatePosition();
     }, 100),
-    [containerRef]
+    []
   );
 
   // Watches the container for changes in size, and recalculates the position
@@ -296,33 +319,62 @@ export default function ClickPopover({
       )
     : panel;
 
+  const panelWrapper = (
+    <div
+      className={classNames(styles.panel, {
+        [styles.appear]: fadeEffect,
+        [styles.closing]: closing && fadeEffect,
+      })}
+      ref={panelRef}
+      role={panelRole}
+      aria-label={ariaLabelPanel}
+      style={position}
+      id={panelId}
+    >
+      {panel}
+    </div>
+  );
+
   return (
     <div
       ref={childrenRef}
       aria-expanded={active}
+      tabIndex={focusable ? 0 : undefined}
       onClick={() => {
         if (!active) addPanel();
       }}
       className={styles.expandable}
       aria-label={ariaLabelChildren}
+      aria-describedby={panelId}
+      role="button"
+      onKeyDown={
+        focusable
+          ? (e) => {
+              if (
+                (e.key === "Enter" || e.key === " ") &&
+                childrenRef.current?.matches(":focus-visible")
+              ) {
+                active && !closing ? removePanel() : addPanel();
+              }
+            }
+          : undefined
+      }
     >
       {children}
-      {active && (
-        <div
-          className={classNames(styles.panel, {
-            [styles.appear]: fadeEffect,
-            [styles.closing]: closing && fadeEffect,
-          })}
-          ref={panelRef}
-          role={panelRole}
-          aria-label={ariaLabelPanel}
-          style={{
-            ...position,
-          }}
-        >
-          {panel}
-        </div>
-      )}
+      {active &&
+        (focusTrap ? (
+          <FocusTrap
+            focusTrapOptions={{
+              preventScroll: true,
+              escapeDeactivates: true,
+              clickOutsideDeactivates: true,
+            }}
+          >
+            {panelWrapper}
+          </FocusTrap>
+        ) : (
+          panelWrapper
+        ))}
     </div>
   );
 }

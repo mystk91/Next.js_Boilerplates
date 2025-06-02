@@ -8,28 +8,33 @@ import { throttle } from "lodash";
 /*  Displays a popover panel when you hover over an element
  *    children       - the elements which the hover event will be given to
  *    panel          - the inputed panel that will be displayed on hover
+ *    panelId?        - id for the panel, also used in aria-describedBy
  *    direction      - the direction which the panel will be anchored to
  *    portalTargetRef - the ref to which the panel will be appended to
  *    anchorRef       - optional ref, panel will position itself relative to the anchorRef rather than children
  *    offset         - adds a gap via padding between the children and the panel, in rem (can be negative also)
+ *    offsetPadding? - boolean for if padding will be used to create the offset, default true
  *    align?         - aligns the panel on a side of the children, flows the opposite direction, MUST be perpendicular of "direction"
  *    shiftRem?      - shifts the panel in rem
- *    shiftChildPercent?  - shifts the panel, by a percent of the children's width / height, 0 to 100
- *    shiftPanelPercent? - shifts the panel, by a percent of the panel's width / height, 0 to 100
+ *    shiftChildPercent?  - shifts the panel, by a percent of the children's width / height
+ *    shiftPanelPercent? - shifts the panel, by a percent of the panel's width / height
  *    fadeEffect?    - plays the default fade in / out animation, default true
  *    closingTime?   - the time it takes for the panel to close, in ms
  *    boundaryDetection? - moves the panel if it goes out of bounds of the portalTarget, default true
  *    panelRole?          - the role of the panel
  *    ariaLabelChildren? - the aria label for the children
  *    ariaLabelPanel?   - the aria label for the panel
+ *    focusable         - default true, allows panel to appear on tab navigation
  */
 interface HoverPopoverPortalProps {
   children: React.ReactNode;
   panel: React.ReactNode;
+  panelId?: string;
   direction: Direction;
   portalTargetRef: React.RefObject<HTMLElement>;
   anchorRef?: React.RefObject<HTMLElement>;
   offset?: number;
+  offsetPadding?: boolean;
   shiftRem?: number;
   shiftChildPercent?: number;
   shiftPanelPercent?: number;
@@ -39,6 +44,7 @@ interface HoverPopoverPortalProps {
   panelRole?: string;
   ariaLabelChildren?: string;
   ariaLabelPanel?: string;
+  focusable?: boolean;
 }
 
 type Side = "top" | "right" | "bottom" | "left";
@@ -77,10 +83,12 @@ const positionObject = {
 export default function HoverPopoverPortal({
   children,
   panel,
+  panelId,
   portalTargetRef,
   anchorRef,
   direction,
   offset = 0.0,
+  offsetPadding = true,
   shiftRem = 0.0,
   shiftChildPercent = 0,
   shiftPanelPercent = 0,
@@ -90,6 +98,7 @@ export default function HoverPopoverPortal({
   panelRole = "dialog",
   ariaLabelChildren = "Hover to reveal more information",
   ariaLabelPanel = "Revealed panel",
+  focusable = true,
 }: HoverPopoverPortalProps) {
   const [active, setActive] = useState(false);
   const [closing, setClosing] = useState(false);
@@ -125,16 +134,29 @@ export default function HoverPopoverPortal({
     }, closingTime);
   }
 
-  // Removes the panel when the mouse leaves our hover area
-  function handleMouseLeave(e: React.MouseEvent) {
-    const target = e.relatedTarget as Node | null;
+  //Adds the panel if the child element is focused or hovered over, removes otherwise
+  function updatePanelStatus() {
+    const isChildrenFocused = focusable
+      ? childrenRef.current?.matches(":focus-visible") ||
+        !!childrenRef.current?.querySelector(":focus-visible")
+      : false;
+
+    const isPanelFocused =
+      panelRef.current?.matches(":focus-visible") ||
+      !!panelRef.current?.querySelector(":focus-visible");
+
+    const isChildHovered = childrenRef.current?.matches(":hover");
+    const isPanelHovered = panelRef.current?.matches(":hover");
     if (
-      (panelRef.current && panelRef.current.contains(target)) ||
-      (childrenRef.current && childrenRef.current.contains(target))
+      isChildrenFocused ||
+      isPanelFocused ||
+      isChildHovered ||
+      isPanelHovered
     ) {
-      return;
+      addPanel();
+    } else {
+      removePanel();
     }
-    removePanel();
   }
 
   //Moves the panel to one of the sides when it becomes active, adds events for positioning
@@ -155,7 +177,7 @@ export default function HoverPopoverPortal({
     throttle(() => {
       calculatePosition();
     }, 100),
-    [portalTargetRef]
+    []
   );
 
   // Watches the portal target for changes in size, and recalculates the position
@@ -187,7 +209,7 @@ export default function HoverPopoverPortal({
     const translates = { x: 0, y: 0 };
 
     //Handles the offset
-    if (offset < 0) {
+    if (offset < 0 || !offsetPadding) {
       translates[verticalDirection ? `y` : `x`] =
         side === "top" || side === "left" ? -1 * offset : offset;
     } else {
@@ -364,10 +386,14 @@ export default function HoverPopoverPortal({
       <div
         ref={childrenRef}
         aria-expanded={active}
-        onMouseOver={addPanel}
-        onMouseLeave={handleMouseLeave}
+        tabIndex={focusable ? 0 : undefined}
+        onMouseOver={updatePanelStatus}
+        onMouseLeave={updatePanelStatus}
+        onFocus={focusable ? updatePanelStatus : undefined}
+        onBlur={() => setTimeout(updatePanelStatus, 0)}
         className={styles.expandable}
         aria-label={ariaLabelChildren}
+        aria-describedby={panelId}
       >
         {children}
       </div>
@@ -382,8 +408,11 @@ export default function HoverPopoverPortal({
             ref={panelRef}
             role={panelRole}
             aria-label={ariaLabelPanel}
-            onMouseOver={addPanel}
-            onMouseLeave={handleMouseLeave}
+            onMouseLeave={updatePanelStatus}
+            onBlur={
+              focusable ? () => setTimeout(updatePanelStatus, 0) : undefined
+            }
+            id={panelId}
           >
             {panel}
           </div>,
