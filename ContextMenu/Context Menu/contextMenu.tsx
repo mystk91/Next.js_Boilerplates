@@ -35,7 +35,7 @@ export interface SubmenuItem {
 // Lets us add a divider line or a blank space to our menu
 export interface DecorationItem {
   type: "decoration";
-  decoration: "line" | "blank";
+  decoration: "line" | "space";
 }
 export type Item = ActionItem | SubmenuItem | DecorationItem;
 
@@ -177,7 +177,7 @@ export function Item({
     item.decoration === "line" ? (
       <div className={styles.line} />
     ) : (
-      <div className={styles.blank} />
+      <div className={styles.space} />
     )
   ) : item.type === "submenu" ? (
     <li
@@ -287,7 +287,7 @@ export function SubMenu({
           return item.decoration === "line" ? (
             <div className={styles.line} key={i} />
           ) : (
-            <div className={styles.blank} key={i} />
+            <div className={styles.space} key={i} />
           );
         }
         return (
@@ -365,17 +365,6 @@ export default function ContextMenu({ menu, targetRef }: ContextMenuProps) {
     rect.right + rect.width > window.innerWidth
       ? setDirection("left")
       : setDirection("right");
-    if (visible && itemRefs.current.length > 0) {
-      // Focus only if nothing is already focused in the menu
-      setTimeout(() => {
-        if (
-          menuRef.current &&
-          !menuRef.current.contains(document.activeElement)
-        ) {
-          itemRefs.current[0].current?.focus();
-        }
-      }, 0);
-    }
   }, [visible]);
 
   //Gives the target the contextMenu event, and ways to close the menu
@@ -392,13 +381,25 @@ export default function ContextMenu({ menu, targetRef }: ContextMenuProps) {
     target.addEventListener("contextmenu", handleContextMenu);
     document.addEventListener("click", handleClick);
     window.addEventListener("keydown", escapeKey);
+    window.addEventListener("keydown", handleArrowDown);
     return () => {
       target.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("keydown", escapeKey);
       document.removeEventListener("click", handleClick);
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("keydown", handleArrowDown);
     };
   }, []);
+
+  //Focuses the first menu item if you hit arrow down if nothing else is focused
+  function handleArrowDown(e: globalThis.KeyboardEvent) {
+    const isMenuFocused =
+      menuRef.current?.matches(":focus-visible") ||
+      menuRef.current?.querySelector(":focus-visible");
+    if (e.key === "ArrowDown" && !isMenuFocused) {
+      itemRefs.current[0].current?.focus();
+    }
+  }
 
   //Closes the menu when user hits Escape
   const escapeKey = useCallback(
@@ -443,7 +444,7 @@ export default function ContextMenu({ menu, targetRef }: ContextMenuProps) {
             return item.decoration === "line" ? (
               <div className={styles.line} key={i} />
             ) : (
-              <div className={styles.blank} key={i} />
+              <div className={styles.space} key={i} />
             );
           }
           return (
