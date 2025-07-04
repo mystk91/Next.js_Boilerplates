@@ -86,10 +86,12 @@
   pointer-events: none;
   height: 3rem;
   width: 90%;
+  --gradientStart: light-dark(rgba(255, 255, 255, 0), rgba(50, 50, 50, 0));
+  --gradientEnd: light-dark(rgba(255, 255, 255, 1), rgba(50, 50, 50, 1));
   background: linear-gradient(
     180deg,
-    rgba(var(--backgroundNumbers), 0) 0%,
-    rgba(var(--backgroundNumbers), 1) 100%
+    var(--gradientStart) 0%,
+    var(--gradientEnd) 100%
   );
   z-index: 1;
   top: -3.2rem;

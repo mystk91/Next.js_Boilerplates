@@ -1,0 +1,29 @@
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100vw;
+  min-height: 5.6rem;
+  background: var(--navbarBackground);
+  background-color: var(--navbarBackgroundColor);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.navbarLeft,
+.navbarRight {
+  flex: 1;
+}
+
+@media (max-width: 720px) {
+  .navbarLeft,
+  .navbarRight {
+    flex: none;
+  }
+
+  .navbar {
+    justify-content: space-between;
+    padding: 0 5vw;
+  }
+}
