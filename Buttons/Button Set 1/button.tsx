@@ -1,5 +1,13 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  JSX,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import Link from "next/link";
 import styles from "./button.module.css";
 import classNames from "classnames";
@@ -10,6 +18,7 @@ interface ButtonProps {
   icon?: JSX.Element;
   variant: "primary" | "secondary" | "tertiary";
   onClick?: () => void;
+  onKeyDown?: (e?: React.KeyboardEvent<HTMLButtonElement>) => void;
   width?: "default" | "smallest" | "full";
   ariaLabel?: string;
   type?: "button" | "submit" | "reset";
@@ -24,27 +33,33 @@ interface ButtonProps {
   style?: React.CSSProperties;
 }
 
-export default function Button({
-  text,
-  children,
-  icon,
-  variant,
-  width = "default",
-  onClick,
-  ariaLabel,
-  type = "button",
-  form,
-  name,
-  title,
-  disabled = false,
-  draggable = false,
-  autoFocus = false,
-  tabIndex,
-  id,
-  style,
-}: ButtonProps) {
+export function Button(
+  {
+    text,
+    children,
+    icon,
+    variant,
+    width = "default",
+    onClick,
+    onKeyDown,
+    ariaLabel,
+    type = "button",
+    form,
+    name,
+    title,
+    disabled = false,
+    draggable = false,
+    autoFocus = false,
+    tabIndex,
+    id,
+    style,
+  }: ButtonProps,
+  ref: React.Ref<HTMLButtonElement>
+) {
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  useImperativeHandle(ref, () => buttonRef.current!);
+
+  const timeoutRef = useRef<NodeJS.Timeout>(undefined);
 
   const [active, setActive] = useState(false);
   const enabled = useRef(true);
@@ -83,6 +98,7 @@ export default function Button({
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === "Enter" && enabled.current) {
+      onKeyDown?.(e);
       clearTimeout(timeoutRef.current);
       enabled.current = false;
       enterKeyDown.current = true;
@@ -158,3 +174,5 @@ export default function Button({
     </button>
   );
 }
+
+export default forwardRef<HTMLButtonElement, ButtonProps>(Button);
