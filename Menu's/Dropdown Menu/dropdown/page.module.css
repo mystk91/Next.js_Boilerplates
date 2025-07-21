@@ -1,0 +1,21 @@
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  height: max-content;
+  width: 100vw;
+}
+
+.container {
+  padding-bottom: 20rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: auto;
+  width: 80rem;
+  height: 80rem;
+  border: var(--smallBorder);
+  overflow: hidden;
+  position: relative;
+}
