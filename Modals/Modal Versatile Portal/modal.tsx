@@ -20,6 +20,7 @@ import { createPortal } from "react-dom";
  * transparent - if true, the backdrop of the modal will be transparent
  * centered - if true, will center the modal vertically rather than being elevated
  * extraTopPadding - if true, will add a little more padding so the closeButton won't overlap with modal content
+ * unstyled - if true, removes the default border, background, and padding from modal
  * backdropStyle  - adds any additional styling to the backdrop
  * modalStyle - adds any additional styling to the modal
  */
@@ -32,6 +33,7 @@ interface ModalProps {
   transparent?: boolean;
   centered?: boolean;
   extraTopPadding?: boolean;
+  unstyled?: boolean;
   backdropStyle?: React.CSSProperties;
   modalStyle?: React.CSSProperties;
 }
@@ -45,6 +47,7 @@ export default function Modal({
   transparent = false,
   centered = false,
   extraTopPadding = false,
+  unstyled = false,
   backdropStyle,
   modalStyle,
 }: ModalProps) {
@@ -94,6 +97,7 @@ export default function Modal({
           className={classNames(styles.modal, {
             [styles.top_padding]: closeButton,
             [styles.extra_top_padding]: extraTopPadding,
+            [styles.unstyled]: unstyled,
           })}
           role="dialog"
           aria-modal="true"

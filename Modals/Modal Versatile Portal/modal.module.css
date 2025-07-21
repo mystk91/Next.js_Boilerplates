@@ -45,6 +45,12 @@
   padding-top: 3.6rem;
 }
 
+.unstyled {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+}
+
 .close_button {
   all: unset;
   box-sizing: border-box;
