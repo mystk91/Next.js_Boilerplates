@@ -37,10 +37,10 @@ export type Item = LinkItem | ActionItem | Decoration;
  * */
 interface MenuItemProps {
   item: Item;
-  itemRef: React.RefObject<HTMLLIElement>;
+  itemRef: React.RefObject<HTMLLIElement | null>;
   onClose: () => void;
   index: number;
-  siblings?: React.RefObject<HTMLLIElement>[];
+  siblings?: React.RefObject<HTMLLIElement | null>[];
   direction?: "right" | "left";
 }
 export function Item({
@@ -214,7 +214,7 @@ export function Item({
 interface DropdownMenuProps {
   label: string;
   menu: Item[];
-  containerRef?: React.RefObject<HTMLElement>;
+  containerRef?: React.RefObject<HTMLElement | null>;
 }
 export default function DropdownMenu({
   label,
@@ -324,9 +324,14 @@ export default function DropdownMenu({
     .map((item, i) => (item.type !== "decoration" ? i : null))
     .filter((i): i is number => i !== null);
 
-  const itemRefs = useRef<Array<React.RefObject<HTMLLIElement>>>(
-    actionableIndexes.map(() => React.createRef<HTMLLIElement>())
-  );
+  const itemRefs = useRef<Array<React.RefObject<HTMLLIElement | null>>>([]);
+
+  // Update itemRefs when actionableIndexes changes
+  useEffect(() => {
+    itemRefs.current = actionableIndexes.map(() =>
+      React.createRef<HTMLLIElement>()
+    );
+  }, [actionableIndexes.length]);
 
   function handleButtonKeydown(e: React.KeyboardEvent<HTMLButtonElement>) {
     if (

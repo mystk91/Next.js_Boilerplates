@@ -21,7 +21,7 @@
 .panel {
   width: 100%;
   padding: 1.8rem 3.6rem 1.8rem;
-  border: var(--smallBorder);
+  border: var(--border);
   display: flex;
   flex-direction: column;
   justify-content: center;

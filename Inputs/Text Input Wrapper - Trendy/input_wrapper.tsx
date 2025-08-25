@@ -47,9 +47,11 @@ export default function InputWrapper({
         togglePassword={togglePassword}
         autocomplete={autocomplete}
       />
-      <div className={styles.error} id={ariaDescribedBy} aria-live="polite">
-        {error}
-      </div>
+      {error && (
+        <div className={styles.error} id={ariaDescribedBy} aria-live="polite">
+          {error}
+        </div>
+      )}
     </div>
   );
 }
