@@ -16,7 +16,7 @@ export interface LinkItem {
 export interface ActionItem {
   type: "action";
   label: string;
-  onClick: () => void;
+  onClick: (e?: React.Event) => void;
 }
 
 // Lets us add a divider line or a blank space to our menu

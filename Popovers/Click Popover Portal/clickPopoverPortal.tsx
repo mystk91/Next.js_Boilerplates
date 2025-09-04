@@ -147,11 +147,9 @@ export default function HoverPopoverPortal({
     if (active) {
       calculatePosition();
       document.addEventListener("click", handleClick);
-      window.addEventListener("resize", throttledCalculatePosition);
       window.addEventListener("scroll", throttledCalculatePosition);
       window.addEventListener("keydown", escapeKey);
       return () => {
-        window.removeEventListener("resize", throttledCalculatePosition);
         window.removeEventListener("scroll", throttledCalculatePosition);
         window.removeEventListener("keydown", escapeKey);
         document.removeEventListener("click", handleClick);

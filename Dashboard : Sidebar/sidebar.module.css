@@ -28,10 +28,17 @@
   justify-content: center;
   min-height: max-content;
   height: 5.4rem;
+  border-left: 0rem solid transparent;
+  transition: border-left 0.2s;
 }
 
 .tab.active {
   background-color: var(--buttonBackground);
+}
+
+.tab:focus-within {
+  border-left: 1.8rem solid rgb(190, 190, 190);
+  transition: border-left 0.2s;
 }
 
 .tab_button {

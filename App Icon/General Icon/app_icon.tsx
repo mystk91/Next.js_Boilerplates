@@ -8,7 +8,7 @@ interface Icon {
   image: JSX.Element;
   notifications?: string;
   name?: string;
-  onClick?: () => void;
+  onClick?: (e?: React.Event) => void;
 }
 
 export default function Icon({

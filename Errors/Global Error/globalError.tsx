@@ -9,7 +9,7 @@ export default function GlobalError({
   reset,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
+  reset: (e?: React.Event) => void;
 }) {
   return (
     // global-error must include html and body tags

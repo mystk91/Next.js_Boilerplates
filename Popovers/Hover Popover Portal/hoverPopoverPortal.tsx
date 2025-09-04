@@ -163,10 +163,8 @@ export default function HoverPopoverPortal({
   useEffect(() => {
     if (active) {
       calculatePosition();
-      window.addEventListener("resize", throttledCalculatePosition);
       window.addEventListener("scroll", throttledCalculatePosition);
       return () => {
-        window.removeEventListener("resize", throttledCalculatePosition);
         window.removeEventListener("scroll", throttledCalculatePosition);
       };
     }

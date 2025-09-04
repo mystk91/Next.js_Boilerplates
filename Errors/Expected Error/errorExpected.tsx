@@ -5,7 +5,11 @@ import styles from "./errorExpected.module.css";
 import Button from "../../Buttons/Button Set 1/button";
 
 // An error meant to show up after failed data fetches
-export default function ExpectedError({ reset }: { reset: () => void }) {
+export default function ExpectedError({
+  reset,
+}: {
+  reset: (e?: React.Event) => void;
+}) {
   return (
     <div className={styles.error} role="alert" aria-live="assertive">
       <h1>Something went wrong loading more stuff.</h1>

@@ -1,5 +1,5 @@
 .backdrop {
-  background-color: var(--modalBackdropColor);
+  background-color: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
   width: 100vw;
   height: 100vh;
   position: fixed;
@@ -12,6 +12,33 @@
   overflow-y: scroll;
   padding: 2vh 0 25vh;
 }
+
+.animate.backdrop {
+  animation: backdropAppear 0.3s;
+}
+
+.backdrop.closing {
+  animation: backdropDisappear 0.4s;
+}
+
+@keyframes backdropAppear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes backdropDisappear {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .pointer {
   cursor: pointer;
 }
@@ -28,7 +55,7 @@
   border: var(--smallBorder);
   background-color: var(--background);
   height: max-content;
-  padding: 1.2rem 2.4rem 1.2rem 2.4rem;
+  padding: 1.2rem 0rem;
   margin: auto 2vw;
   cursor: default;
   max-width: 95vw;

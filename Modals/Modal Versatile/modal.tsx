@@ -20,6 +20,7 @@ import classNames from "classnames";
  * centered - if true, will center the modal vertically rather than being elevated
  * extraTopPadding - if true, will add a little more padding so the closeButton won't overlap with modal content
  * unstyled - if true, removes the default border, background, and padding from modal
+ * animate? - if true, the modal will have an entry and exit animation
  * backdropStyle  - adds any additional styling to the backdrop
  * modalStyle - adds any additional styling to the modal
  */
@@ -33,6 +34,7 @@ interface ModalProps {
   centered?: boolean;
   extraTopPadding?: boolean;
   unstyled?: boolean;
+  animate?: boolean;
   backdropStyle?: React.CSSProperties;
   modalStyle?: React.CSSProperties;
 }
@@ -47,14 +49,34 @@ export default function Modal({
   centered = false,
   extraTopPadding = false,
   unstyled = false,
+  animate = false,
   backdropStyle,
   modalStyle,
 }: ModalProps) {
+  const [closing, setClosing] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  //Clears the timer on dismount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   //Closes the modal when user hits ESC
   const escapeKey = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        closeFunction();
+        if (animate) {
+          setClosing(true);
+          timeoutRef.current = setTimeout(() => {
+            closeFunction();
+          }, 300);
+        } else {
+          closeFunction();
+        }
       }
     },
     [closeFunction]
@@ -77,7 +99,14 @@ export default function Modal({
   //Closes the modal on click: for the backdrop and other buttons
   function closeModal(event: React.MouseEvent): void {
     if (event.target === event.currentTarget) {
-      closeFunction();
+      if (animate) {
+        setClosing(true);
+        timeoutRef.current = setTimeout(() => {
+          closeFunction();
+        }, 300);
+      } else {
+        closeFunction();
+      }
     }
   }
 
@@ -88,15 +117,20 @@ export default function Modal({
           [styles.pointer]: closeOnBackdropClick,
           [styles.transparent]: transparent,
           [styles.centered]: centered,
+          [styles.animate]: animate,
+          [styles.closing]: closing,
         })}
-        onClick={closeOnBackdropClick ? closeModal : () => null}
+        onMouseDown={closeOnBackdropClick ? closeModal : () => null}
         style={backdropStyle}
+        onKeyDown={(e) => e.stopPropagation()}
       >
         <div
           className={classNames(styles.modal, {
             [styles.top_padding]: closeButton,
             [styles.extra_top_padding]: extraTopPadding,
             [styles.unstyled]: unstyled,
+            [styles.animate]: animate,
+            [styles.closing]: closing,
           })}
           role="dialog"
           aria-modal="true"
@@ -107,6 +141,7 @@ export default function Modal({
               className={styles.close_button}
               onClick={closeModal}
               aria-label={"Close Modal"}
+              tabIndex={0}
             >
               <svg
                 id="close-icon"

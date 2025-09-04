@@ -151,10 +151,8 @@ export default function ClickPopover({
       document.addEventListener("click", handleClick);
       window.addEventListener("keydown", escapeKey);
       if (containerRef) {
-        window.addEventListener("resize", throttledCalculatePosition);
         window.addEventListener("scroll", throttledCalculatePosition);
         return () => {
-          window.removeEventListener("resize", throttledCalculatePosition);
           window.removeEventListener("scroll", throttledCalculatePosition);
           document.removeEventListener("click", handleClick);
           window.removeEventListener("keydown", escapeKey);

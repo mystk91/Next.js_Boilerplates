@@ -162,10 +162,8 @@ export default function HoverPopover({
     if (active) {
       calculatePosition();
       if (containerRef) {
-        window.addEventListener("resize", throttledCalculatePosition);
         window.addEventListener("scroll", throttledCalculatePosition);
         return () => {
-          window.removeEventListener("resize", throttledCalculatePosition);
           window.removeEventListener("scroll", throttledCalculatePosition);
         };
       }

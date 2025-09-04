@@ -17,7 +17,7 @@ interface ContextMenuProps {
 export interface ActionMenuItem {
   type: "action";
   label: string;
-  onClick: () => void;
+  onClick: (e?: React.Event) => void;
 }
 // Opens a submenu when you click on this menu item
 export interface SubmenuMenuItem {

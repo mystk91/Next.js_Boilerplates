@@ -17,7 +17,7 @@ interface ButtonProps {
   children?: React.ReactNode;
   icon?: JSX.Element;
   variant: "primary" | "secondary" | "tertiary";
-  onClick?: () => void;
+  onClick?: (e?: React.Event) => void;
   onKeyDown?: (e?: React.KeyboardEvent<HTMLButtonElement>) => void;
   width?: "default" | "smallest" | "full";
   ariaLabel?: string;
@@ -97,8 +97,8 @@ export function Button(
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === "Enter" && enabled.current) {
-      onKeyDown?.(e);
+    if ((e.key === "Enter" || e.key === " ") && enabled.current) {
+      e.preventDefault();
       clearTimeout(timeoutRef.current);
       enabled.current = false;
       enterKeyDown.current = true;
@@ -107,7 +107,8 @@ export function Button(
   };
 
   const handleKeyUp = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === "Enter" && !enabled.current) {
+    if ((e.key === "Enter" || e.key === " ") && !enabled.current) {
+      e.preventDefault();
       setActive(false);
       timeoutRef.current = setTimeout(() => {
         enabled.current = true;
