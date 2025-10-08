@@ -7,6 +7,7 @@ export default function ToastLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // These animations should be in your globals.css file 
   const transition = cssTransition({
     enter: "Toastify__bounce-enter--bottom-center",
     exit: "toast-exit-custom",

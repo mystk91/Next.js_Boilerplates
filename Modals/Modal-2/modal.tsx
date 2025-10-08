@@ -33,10 +33,10 @@ export default function Modal({ children, closeFunction }: ModalProps) {
   //Adds a keydown listener for escapeKey, and prevents the page from scrolling
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", escapeKey);
+    document.addEventListener("keydown", escapeKey, true);
     return () => {
       document.body.style.overflow = "auto";
-      window.removeEventListener("keydown", escapeKey);
+      document.removeEventListener("keydown", escapeKey, true);
     };
   }, [escapeKey]);
 

@@ -86,15 +86,15 @@ export default function Modal({
   useEffect(() => {
     document.body.style.overflow = "hidden";
     if (closeOnEscape) {
-      window.addEventListener("keydown", escapeKey);
+      document.addEventListener("keydown", escapeKey, true);
     }
     return () => {
       document.body.style.overflow = "auto";
       if (closeOnEscape) {
-        window.removeEventListener("keydown", escapeKey);
+        document.removeEventListener("keydown", escapeKey, true);
       }
     };
-  }, [escapeKey]);
+  }, [escapeKey, closeOnEscape]);
 
   //Closes the modal on click: for the backdrop and other buttons
   function closeModal(event: React.MouseEvent): void {

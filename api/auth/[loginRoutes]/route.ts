@@ -4,8 +4,8 @@ import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import nodemailer from "nodemailer";
 
-//Different PUT routes related to login
-export async function PUT(
+//Different POST routes related to login and account creation
+export async function POST(
   req: NextRequest,
   { params }: { params: { loginRoutes: string } }
 ) {
@@ -15,22 +15,6 @@ export async function PUT(
         return await login(req);
       case "logout":
         return await logout(req);
-      default:
-        return networkError();
-    }
-  } catch {
-    return networkError();
-  }
-}
-
-//Different POST routes related account creation
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { loginRoutes: string } }
-) {
-  try {
-    console.log("we started");
-    switch (params.loginRoutes) {
       case "sendVerification":
         return await sendVerification(req);
       case "verifyEmail":
@@ -82,13 +66,13 @@ function failure() {
 //Error for when api route breaks during something like a database operation
 function networkError() {
   return NextResponse.json({
-    errors: "A network error occurred",
+    errors: "Something went wrong. Try again soon.",
   });
 }
 //Error for when api route breaks when using a form with a password
 function networkErrorPassword() {
   return NextResponse.json({
-    errors: { password: "A network error occurred" },
+    errors: "Something went wrong. Try again soon.",
   });
 }
 //Error for when username / password is not valid
@@ -112,7 +96,7 @@ async function getValues(
   try {
     /**
      * Implement DB-logic to retrieve the values here, placeholder below
-     *
+     * I know what the real password is
      */
     let result: Record<string, any> = {
       email: "somebody@gmail.com",
@@ -231,6 +215,7 @@ async function login(req: NextRequest) {
       ["email", "password"]
     );
     if (!user) {
+      // Here we are doing a fake-out bcrypt so user who submits an inexistent email won't get feedback instantly
       bcrypt.compare(
         body.password,
         "QhU7UmlNS1Cl9ZPQNVUTf9I8hq4Uq9vYHZjSn8YmEVtL5XyG"
@@ -243,7 +228,7 @@ async function login(req: NextRequest) {
       await updateValues("Accounts", "email", user.email, {
         sessionId: sessionId,
       });
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       cookieStore.set({
         name: "sessionId",
         value: sessionId,
@@ -263,10 +248,11 @@ async function login(req: NextRequest) {
 //Logs the user out
 async function logout(req: NextRequest) {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const sessionId = cookieStore.get("sessionId")?.value;
     const newSessionId = generateString(48);
     if (sessionId) {
+      // Giving their account a new random sessionId
       await updateValues("Accounts", "sessionId", sessionId, {
         sessionId: newSessionId,
       });
@@ -274,7 +260,7 @@ async function logout(req: NextRequest) {
     cookieStore.delete("sessionId");
     return success();
   } catch {
-    return networkError();
+    return failure();
   }
 }
 
